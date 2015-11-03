@@ -1,3 +1,7 @@
+.PHONY: js
+js:
+	babel --watch js/app.jsx --out-file build/app.js
+
 .PHONY: css
 css:
 	mkdir -p bundle
@@ -5,9 +9,14 @@ css:
 
 .PHONY: server
 server:
-	browser-sync start --server --files='index.html,bundle/app.css,js/app.js'
+	browser-sync start --server --files='index.html,bundle/app.css,js/app.js, build/app.js'
 
 
 .PHONY: clean
 clean:
 	rm -r bundle
+
+
+.PHONY: all
+all:
+	(make css & make js & make server & wait)
