@@ -1,11 +1,10 @@
-
 import React from "react";
 import SiteTitle from "./component/SiteTitle.jsx";
 import Products from "./component/Products.jsx";
 import Cart from "./component/Cart.jsx";
 import Checkout from "./component/Checkout.jsx";
 
-let {shoes,cartItems} = require('./data.js');
+import {shoes,cartItems} from './data.js';
 
 let App = React.createClass({
     render() {
@@ -38,17 +37,10 @@ let App = React.createClass({
 });
 
 
-
-
-
-
-
-
-
-
 window.onload = () => {
     React.render(<App/>, document.querySelector("#root"));
 }
+
 
 
 

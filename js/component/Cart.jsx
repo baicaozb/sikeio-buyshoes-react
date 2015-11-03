@@ -1,4 +1,5 @@
 import React from "react";
+import Ps from 'perfect-scrollbar';
 
 class CartItem extends React.Component
 {
