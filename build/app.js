@@ -65,7 +65,7 @@
 	
 	var _Cart2 = _interopRequireDefault(_Cart);
 	
-	var _Checkout = __webpack_require__(/*! ./component/Checkout.jsx */ 160);
+	var _Checkout = __webpack_require__(/*! ./component/Checkout.jsx */ 181);
 	
 	var _Checkout2 = _interopRequireDefault(_Checkout);
 	
@@ -21155,7 +21155,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _perfectScrollbar = __webpack_require__(/*! perfect-scrollbar */ 161);
+	var _perfectScrollbar = __webpack_require__(/*! perfect-scrollbar */ 160);
 	
 	var _perfectScrollbar2 = _interopRequireDefault(_perfectScrollbar);
 	
@@ -21306,106 +21306,6 @@
 
 /***/ },
 /* 160 */
-/*!***********************************!*\
-  !*** ./js/component/Checkout.jsx ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Checkout = (function (_React$Component) {
-	  _inherits(Checkout, _React$Component);
-	
-	  function Checkout() {
-	    _classCallCheck(this, Checkout);
-	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Checkout).apply(this, arguments));
-	  }
-	
-	  _createClass(Checkout, [{
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "div",
-	        { className: "checkout" },
-	        _react2.default.createElement("hr", { className: "checkout__divider" }),
-	        _react2.default.createElement("input", { type: "text", className: "checkout__coupon-input", placeholder: "coupon code" }),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "checkout__line" },
-	          _react2.default.createElement(
-	            "div",
-	            { className: "checkout__line__label" },
-	            "Discount"
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "checkout__line__amount" },
-	            "-$90"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "checkout__line" },
-	          _react2.default.createElement(
-	            "div",
-	            { className: "checkout__line__label" },
-	            "Subtotal"
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "checkout__line__amount checkout__line__amount--strikeout" },
-	            "$450"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          { className: "checkout__line" },
-	          _react2.default.createElement(
-	            "div",
-	            { className: "checkout__line__amount checkout__line__amount--omg-savings" },
-	            "$360"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "a",
-	          { className: "checkout__button" },
-	          _react2.default.createElement("img", { className: "checkout__button__icon", src: "img/cart-icon.svg" }),
-	          _react2.default.createElement(
-	            "div",
-	            { className: "checkout__button__label" },
-	            "Checkout"
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Checkout;
-	})(_react2.default.Component);
-	
-	exports.default = Checkout;
-
-/***/ },
-/* 161 */
 /*!**************************************!*\
   !*** ./~/perfect-scrollbar/index.js ***!
   \**************************************/
@@ -21416,11 +21316,11 @@
 	 */
 	'use strict';
 	
-	module.exports = __webpack_require__(/*! ./src/js/main */ 162);
+	module.exports = __webpack_require__(/*! ./src/js/main */ 161);
 
 
 /***/ },
-/* 162 */
+/* 161 */
 /*!********************************************!*\
   !*** ./~/perfect-scrollbar/src/js/main.js ***!
   \********************************************/
@@ -21431,9 +21331,9 @@
 	 */
 	'use strict';
 	
-	var destroy = __webpack_require__(/*! ./plugin/destroy */ 163)
-	  , initialize = __webpack_require__(/*! ./plugin/initialize */ 171)
-	  , update = __webpack_require__(/*! ./plugin/update */ 181);
+	var destroy = __webpack_require__(/*! ./plugin/destroy */ 162)
+	  , initialize = __webpack_require__(/*! ./plugin/initialize */ 170)
+	  , update = __webpack_require__(/*! ./plugin/update */ 180);
 	
 	module.exports = {
 	  initialize: initialize,
@@ -21443,7 +21343,7 @@
 
 
 /***/ },
-/* 163 */
+/* 162 */
 /*!******************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/destroy.js ***!
   \******************************************************/
@@ -21454,9 +21354,9 @@
 	 */
 	'use strict';
 	
-	var d = __webpack_require__(/*! ../lib/dom */ 164)
-	  , h = __webpack_require__(/*! ../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ./instances */ 167);
+	var d = __webpack_require__(/*! ../lib/dom */ 163)
+	  , h = __webpack_require__(/*! ../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ./instances */ 166);
 	
 	module.exports = function (element) {
 	  var i = instances.get(element);
@@ -21477,7 +21377,7 @@
 
 
 /***/ },
-/* 164 */
+/* 163 */
 /*!***********************************************!*\
   !*** ./~/perfect-scrollbar/src/js/lib/dom.js ***!
   \***********************************************/
@@ -21573,7 +21473,7 @@
 
 
 /***/ },
-/* 165 */
+/* 164 */
 /*!**************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/lib/helper.js ***!
   \**************************************************/
@@ -21584,8 +21484,8 @@
 	 */
 	'use strict';
 	
-	var cls = __webpack_require__(/*! ./class */ 166)
-	  , d = __webpack_require__(/*! ./dom */ 164);
+	var cls = __webpack_require__(/*! ./class */ 165)
+	  , d = __webpack_require__(/*! ./dom */ 163);
 	
 	exports.toInt = function (x) {
 	  return parseInt(x, 10) || 0;
@@ -21666,7 +21566,7 @@
 
 
 /***/ },
-/* 166 */
+/* 165 */
 /*!*************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/lib/class.js ***!
   \*************************************************/
@@ -21720,7 +21620,7 @@
 
 
 /***/ },
-/* 167 */
+/* 166 */
 /*!********************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/instances.js ***!
   \********************************************************/
@@ -21731,11 +21631,11 @@
 	 */
 	'use strict';
 	
-	var d = __webpack_require__(/*! ../lib/dom */ 164)
-	  , defaultSettings = __webpack_require__(/*! ./default-setting */ 168)
-	  , EventManager = __webpack_require__(/*! ../lib/event-manager */ 169)
-	  , guid = __webpack_require__(/*! ../lib/guid */ 170)
-	  , h = __webpack_require__(/*! ../lib/helper */ 165);
+	var d = __webpack_require__(/*! ../lib/dom */ 163)
+	  , defaultSettings = __webpack_require__(/*! ./default-setting */ 167)
+	  , EventManager = __webpack_require__(/*! ../lib/event-manager */ 168)
+	  , guid = __webpack_require__(/*! ../lib/guid */ 169)
+	  , h = __webpack_require__(/*! ../lib/helper */ 164);
 	
 	var instances = {};
 	
@@ -21836,7 +21736,7 @@
 
 
 /***/ },
-/* 168 */
+/* 167 */
 /*!**************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/default-setting.js ***!
   \**************************************************************/
@@ -21865,7 +21765,7 @@
 
 
 /***/ },
-/* 169 */
+/* 168 */
 /*!*********************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/lib/event-manager.js ***!
   \*********************************************************/
@@ -21948,7 +21848,7 @@
 
 
 /***/ },
-/* 170 */
+/* 169 */
 /*!************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/lib/guid.js ***!
   \************************************************/
@@ -21973,7 +21873,7 @@
 
 
 /***/ },
-/* 171 */
+/* 170 */
 /*!*********************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/initialize.js ***!
   \*********************************************************/
@@ -21984,19 +21884,19 @@
 	 */
 	'use strict';
 	
-	var cls = __webpack_require__(/*! ../lib/class */ 166)
-	  , h = __webpack_require__(/*! ../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ./instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 172);
+	var cls = __webpack_require__(/*! ../lib/class */ 165)
+	  , h = __webpack_require__(/*! ../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ./instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 171);
 	
 	// Handlers
-	var clickRailHandler = __webpack_require__(/*! ./handler/click-rail */ 174)
-	  , dragScrollbarHandler = __webpack_require__(/*! ./handler/drag-scrollbar */ 175)
-	  , keyboardHandler = __webpack_require__(/*! ./handler/keyboard */ 176)
-	  , mouseWheelHandler = __webpack_require__(/*! ./handler/mouse-wheel */ 177)
-	  , nativeScrollHandler = __webpack_require__(/*! ./handler/native-scroll */ 178)
-	  , selectionHandler = __webpack_require__(/*! ./handler/selection */ 179)
-	  , touchHandler = __webpack_require__(/*! ./handler/touch */ 180);
+	var clickRailHandler = __webpack_require__(/*! ./handler/click-rail */ 173)
+	  , dragScrollbarHandler = __webpack_require__(/*! ./handler/drag-scrollbar */ 174)
+	  , keyboardHandler = __webpack_require__(/*! ./handler/keyboard */ 175)
+	  , mouseWheelHandler = __webpack_require__(/*! ./handler/mouse-wheel */ 176)
+	  , nativeScrollHandler = __webpack_require__(/*! ./handler/native-scroll */ 177)
+	  , selectionHandler = __webpack_require__(/*! ./handler/selection */ 178)
+	  , touchHandler = __webpack_require__(/*! ./handler/touch */ 179);
 	
 	module.exports = function (element, userSettings) {
 	  userSettings = typeof userSettings === 'object' ? userSettings : {};
@@ -22029,7 +21929,7 @@
 
 
 /***/ },
-/* 172 */
+/* 171 */
 /*!**************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/update-geometry.js ***!
   \**************************************************************/
@@ -22040,11 +21940,11 @@
 	 */
 	'use strict';
 	
-	var cls = __webpack_require__(/*! ../lib/class */ 166)
-	  , d = __webpack_require__(/*! ../lib/dom */ 164)
-	  , h = __webpack_require__(/*! ../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ./instances */ 167)
-	  , updateScroll = __webpack_require__(/*! ./update-scroll */ 173);
+	var cls = __webpack_require__(/*! ../lib/class */ 165)
+	  , d = __webpack_require__(/*! ../lib/dom */ 163)
+	  , h = __webpack_require__(/*! ../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ./instances */ 166)
+	  , updateScroll = __webpack_require__(/*! ./update-scroll */ 172);
 	
 	function getThumbSize(i, thumbSize) {
 	  if (i.settings.minScrollbarLength) {
@@ -22159,7 +22059,7 @@
 
 
 /***/ },
-/* 173 */
+/* 172 */
 /*!************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/update-scroll.js ***!
   \************************************************************/
@@ -22170,7 +22070,7 @@
 	 */
 	'use strict';
 	
-	var instances = __webpack_require__(/*! ./instances */ 167);
+	var instances = __webpack_require__(/*! ./instances */ 166);
 	
 	var upEvent = document.createEvent('Event')
 	  , downEvent = document.createEvent('Event')
@@ -22273,7 +22173,7 @@
 
 
 /***/ },
-/* 174 */
+/* 173 */
 /*!*****************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/click-rail.js ***!
   \*****************************************************************/
@@ -22284,10 +22184,10 @@
 	 */
 	'use strict';
 	
-	var h = __webpack_require__(/*! ../../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 173);
+	var h = __webpack_require__(/*! ../../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
 	
 	function bindClickRailHandler(element, i) {
 	  function pageOffset(el) {
@@ -22345,7 +22245,7 @@
 
 
 /***/ },
-/* 175 */
+/* 174 */
 /*!*********************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/drag-scrollbar.js ***!
   \*********************************************************************/
@@ -22356,11 +22256,11 @@
 	 */
 	'use strict';
 	
-	var d = __webpack_require__(/*! ../../lib/dom */ 164)
-	  , h = __webpack_require__(/*! ../../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 173);
+	var d = __webpack_require__(/*! ../../lib/dom */ 163)
+	  , h = __webpack_require__(/*! ../../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
 	
 	function bindMouseScrollXHandler(element, i) {
 	  var currentLeft = null;
@@ -22460,7 +22360,7 @@
 
 
 /***/ },
-/* 176 */
+/* 175 */
 /*!***************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/keyboard.js ***!
   \***************************************************************/
@@ -22471,10 +22371,10 @@
 	 */
 	'use strict';
 	
-	var h = __webpack_require__(/*! ../../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 173);
+	var h = __webpack_require__(/*! ../../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
 	
 	function bindKeyboardHandler(element, i) {
 	  var hovered = false;
@@ -22594,7 +22494,7 @@
 
 
 /***/ },
-/* 177 */
+/* 176 */
 /*!******************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/mouse-wheel.js ***!
   \******************************************************************/
@@ -22605,10 +22505,10 @@
 	 */
 	'use strict';
 	
-	var h = __webpack_require__(/*! ../../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 173);
+	var h = __webpack_require__(/*! ../../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
 	
 	function bindMouseWheelHandler(element, i) {
 	  var shouldPrevent = false;
@@ -22748,7 +22648,7 @@
 
 
 /***/ },
-/* 178 */
+/* 177 */
 /*!********************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/native-scroll.js ***!
   \********************************************************************/
@@ -22759,8 +22659,8 @@
 	 */
 	'use strict';
 	
-	var instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172);
+	var instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171);
 	
 	function bindNativeScrollHandler(element, i) {
 	  i.event.bind(element, 'scroll', function () {
@@ -22775,7 +22675,7 @@
 
 
 /***/ },
-/* 179 */
+/* 178 */
 /*!****************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/selection.js ***!
   \****************************************************************/
@@ -22786,10 +22686,10 @@
 	 */
 	'use strict';
 	
-	var h = __webpack_require__(/*! ../../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 173);
+	var h = __webpack_require__(/*! ../../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
 	
 	function bindSelectionHandler(element, i) {
 	  function getRangeNode() {
@@ -22896,7 +22796,7 @@
 
 
 /***/ },
-/* 180 */
+/* 179 */
 /*!************************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/handler/touch.js ***!
   \************************************************************/
@@ -22907,9 +22807,9 @@
 	 */
 	'use strict';
 	
-	var instances = __webpack_require__(/*! ../instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 172)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 173);
+	var instances = __webpack_require__(/*! ../instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
 	
 	function bindTouchHandler(element, i, supportsTouch, supportsIePointer) {
 	  function shouldPreventDefault(deltaX, deltaY) {
@@ -23076,7 +22976,7 @@
 
 
 /***/ },
-/* 181 */
+/* 180 */
 /*!*****************************************************!*\
   !*** ./~/perfect-scrollbar/src/js/plugin/update.js ***!
   \*****************************************************/
@@ -23087,10 +22987,10 @@
 	 */
 	'use strict';
 	
-	var d = __webpack_require__(/*! ../lib/dom */ 164)
-	  , h = __webpack_require__(/*! ../lib/helper */ 165)
-	  , instances = __webpack_require__(/*! ./instances */ 167)
-	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 172);
+	var d = __webpack_require__(/*! ../lib/dom */ 163)
+	  , h = __webpack_require__(/*! ../lib/helper */ 164)
+	  , instances = __webpack_require__(/*! ./instances */ 166)
+	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 171);
 	
 	module.exports = function (element) {
 	  var i = instances.get(element);
@@ -23118,6 +23018,106 @@
 	  d.css(i.scrollbarYRail, 'display', '');
 	};
 
+
+/***/ },
+/* 181 */
+/*!***********************************!*\
+  !*** ./js/component/Checkout.jsx ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Checkout = (function (_React$Component) {
+	  _inherits(Checkout, _React$Component);
+	
+	  function Checkout() {
+	    _classCallCheck(this, Checkout);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Checkout).apply(this, arguments));
+	  }
+	
+	  _createClass(Checkout, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "checkout" },
+	        _react2.default.createElement("hr", { className: "checkout__divider" }),
+	        _react2.default.createElement("input", { type: "text", className: "checkout__coupon-input", placeholder: "coupon code" }),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "checkout__line" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "checkout__line__label" },
+	            "Discount"
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "checkout__line__amount" },
+	            "-$90"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "checkout__line" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "checkout__line__label" },
+	            "Subtotal"
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "checkout__line__amount checkout__line__amount--strikeout" },
+	            "$450"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "checkout__line" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "checkout__line__amount checkout__line__amount--omg-savings" },
+	            "$360"
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "a",
+	          { className: "checkout__button" },
+	          _react2.default.createElement("img", { className: "checkout__button__icon", src: "img/cart-icon.svg" }),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "checkout__button__label" },
+	            "Checkout"
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Checkout;
+	})(_react2.default.Component);
+	
+	exports.default = Checkout;
 
 /***/ },
 /* 182 */

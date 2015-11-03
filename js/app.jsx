@@ -36,11 +36,8 @@ let App = React.createClass({
     }
 });
 
-
 window.onload = () => {
     React.render(<App/>, document.querySelector("#root"));
 }
-
-
 
 

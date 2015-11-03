@@ -1,6 +1,7 @@
 .PHONY: js
 js:
-	babel --watch js/app.jsx --out-file build/app.js
+	webpack --watch --progress -d
+
 
 .PHONY: css
 css:
