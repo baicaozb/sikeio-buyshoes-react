@@ -1,48 +1,44 @@
 import React from "react";
+import QuantityControl from './QuantityControl.jsx'
+
 import Ps from 'perfect-scrollbar';
+import CartStore from '../store/CartStore.js'
 
 class CartItem extends React.Component
 {
-  render() {
-  var {id, quantity} = this.props.line;
 
-  return (
+  removeSelfHandler() {
+    CartStore.removeItem(this.props.line.id);
+  }
+
+  render() {
+  var {id, name, imagePath, price, quantity} = this.props.line;
+
+      return (
     <div className="cart-item">
       <div className="cart-item__top-part">
         <div className="cart-item__image">
-          <img src="img/shoe1.jpg" />
+          <img src={imagePath} />
         </div>
         <div className="cart-item__top-part__middle">
           <div className="cart-item__title">
-            {id}
+            {name}
           </div>
           <div className="cart-item__price">
-            $299
+            {'$' + price}
           </div>
         </div>
-        <img className="cart-item__trash" src="img/trash-icon.svg" />
+        <img className="cart-item__trash" src="img/trash-icon.svg"
+          onClick={this.removeSelfHandler.bind(this)}
+          />
       </div> {/* cart-item__top-part */}
-      <QuantityControl  quantity={quantity}/>
+      <QuantityControl  quantity={quantity} pid={id}/>
     </div>
   );
 }
 
 }
 
-class QuantityControl extends React.Component
-{
-  render() {
-    var quantity = this.props.quantity;
-    return(
-      <div className="adjust-qty">
-        <a className="adjust-qty__button">-</a>
-
-        <div className="adjust-qty__number">{quantity}</div>
-        <a className="adjust-qty__button">+</a>
-      </div>
-    );
-  }
-}
 
 
 
@@ -53,14 +49,16 @@ class Cart extends React.Component
   componentDidMount() {
     let cart = React.findDOMNode(this.refs.cart);
     Ps.initialize(cart);
+
+    CartStore.addChangeListener(this.forceUpdate.bind(this));
   }
 
   render() {
 
-    let cartItems = this.props.data;
-    let names = Object.keys(cartItems);
-    let items = names.map((name, index) => {
-      return <CartItem key={index} line={cartItems[name]} />
+    let cartItems = CartStore.getCartItems();
+    let ids = Object.keys(cartItems);
+    let items = ids.map((id, index) => {
+      return <CartItem key={index} line={cartItems[id]} />
     })
 
 

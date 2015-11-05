@@ -1,7 +1,27 @@
 import React from 'react';
+import CartStore from '../store/CartStore.js'
+
 
 class Checkout extends React.Component {
+
+  componentDidMount() {
+    CartStore.addChangeListener(this.forceUpdate.bind(this));
+  }
+
+
   render() {
+
+    let items = CartStore.valueArray();
+
+    let sum = 0;
+    if( items.length > 0 )
+    {
+      sum = items.reduce( (sum, item)=> {
+        return sum + item.price * item.quantity;
+      }, 0).toFixed(2);
+    }
+
+
     return (
       <div className="checkout">
         <hr className="checkout__divider"/>
@@ -12,20 +32,20 @@ class Checkout extends React.Component {
             Discount
           </div>
           <div className="checkout__line__amount">
-            -$90
+            -$0.00
           </div>
         </div>
         <div className="checkout__line">
           <div className="checkout__line__label">
             Subtotal
           </div>
-          <div className="checkout__line__amount checkout__line__amount--strikeout">
-            $450
+          <div className="checkout__line__amount ">
+            {'$' + sum}
           </div>
         </div>
         <div className="checkout__line">
           <div className="checkout__line__amount checkout__line__amount--omg-savings">
-            $360
+            {'$' + sum}
           </div>
         </div>
         <a className="checkout__button">

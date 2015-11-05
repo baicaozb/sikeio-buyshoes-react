@@ -24,7 +24,7 @@ let App = React.createClass({
                     </div>
                 </div>
                 <div className="site__right-sidebar">
-                    <Cart data={cartItems}/>
+                    <Cart />
                     <Checkout/>
                 </div>
                 <a className="site__right-sidebar-toggle">
