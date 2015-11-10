@@ -61,15 +61,13 @@
 	
 	var _Products2 = _interopRequireDefault(_Products);
 	
-	var _Cart = __webpack_require__(/*! ./component/Cart.jsx */ 159);
+	var _Cart = __webpack_require__(/*! ./component/Cart.jsx */ 166);
 	
 	var _Cart2 = _interopRequireDefault(_Cart);
 	
-	var _Checkout = __webpack_require__(/*! ./component/Checkout.jsx */ 181);
+	var _Checkout = __webpack_require__(/*! ./component/Checkout.jsx */ 167);
 	
 	var _Checkout2 = _interopRequireDefault(_Checkout);
-	
-	var _data = __webpack_require__(/*! ./data.js */ 182);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -97,7 +95,7 @@
 	                    _react2.default.createElement(
 	                        "div",
 	                        { className: "site__content" },
-	                        _react2.default.createElement(_Products2.default, { data: _data.shoes })
+	                        _react2.default.createElement(_Products2.default, null)
 	                    )
 	                ),
 	                _react2.default.createElement(
@@ -20971,7 +20969,7 @@
   \************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 	
@@ -20982,6 +20980,14 @@
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _ProductStore = __webpack_require__(/*! ../store/ProductStore.js */ 189);
+	
+	var _ProductStore2 = _interopRequireDefault(_ProductStore);
+	
+	var _connect = __webpack_require__(/*! ./connect.jsx */ 163);
+	
+	var _connect2 = _interopRequireDefault(_connect);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -21001,17 +21007,27 @@
 	  }
 	
 	  _createClass(SiteTitle, [{
-	    key: "render",
+	    key: 'toggleShowOnlyLike',
+	    value: function toggleShowOnlyLike(e) {
+	      _ProductStore2.default.toggleShowOnlyLike();
+	    }
+	  }, {
+	    key: 'render',
 	    value: function render() {
+	
+	      var showOnlyLike = this.props.showOnlyLike;
+	      var heartIcon = showOnlyLike ? "img/heart-liked.svg" : "img/heart.svg";
+	
 	      return _react2.default.createElement(
-	        "div",
-	        { "class": "title" },
+	        'div',
+	        { 'class': 'title' },
 	        _react2.default.createElement(
-	          "h2",
+	          'h2',
 	          null,
-	          "Buy Me Shoes"
+	          'Buy Me Shoes'
 	        ),
-	        _react2.default.createElement("img", { "class": "title__heart", src: "img/heart.svg" })
+	        _react2.default.createElement('img', { 'class': 'title__heart', src: heartIcon,
+	          onClick: this.toggleShowOnlyLike.bind(this) })
 	      );
 	    }
 	  }]);
@@ -21019,7 +21035,21 @@
 	  return SiteTitle;
 	})(_react2.default.Component);
 	
-	exports.default = SiteTitle;
+	var ConnectedSiteTitle = (function (_SiteTitle) {
+	  _inherits(ConnectedSiteTitle, _SiteTitle);
+	
+	  function ConnectedSiteTitle() {
+	    _classCallCheck(this, ConnectedSiteTitle);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ConnectedSiteTitle).apply(this, arguments));
+	  }
+	
+	  return ConnectedSiteTitle;
+	})(SiteTitle);
+	
+	ConnectedSiteTitle = (0, _connect2.default)(_ProductStore2.default, "showOnlyLike")(ConnectedSiteTitle);
+	
+	exports.default = ConnectedSiteTitle;
 
 /***/ },
 /* 158 */
@@ -21040,13 +21070,25 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _QuantityControl = __webpack_require__(/*! ./QuantityControl.jsx */ 185);
+	var _QuantityControl = __webpack_require__(/*! ./QuantityControl.jsx */ 159);
 	
 	var _QuantityControl2 = _interopRequireDefault(_QuantityControl);
 	
-	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 183);
+	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 160);
 	
 	var _CartStore2 = _interopRequireDefault(_CartStore);
+	
+	var _LikeStore = __webpack_require__(/*! ../store/LikeStore.js */ 162);
+	
+	var _LikeStore2 = _interopRequireDefault(_LikeStore);
+	
+	var _ProductStore = __webpack_require__(/*! ../store/ProductStore.js */ 189);
+	
+	var _ProductStore2 = _interopRequireDefault(_ProductStore);
+	
+	var _connect = __webpack_require__(/*! ./connect.jsx */ 163);
+	
+	var _connect2 = _interopRequireDefault(_connect);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -21071,6 +21113,11 @@
 	      _CartStore2.default.addItem(this.props.product);
 	    }
 	  }, {
+	    key: "addLikeHandler",
+	    value: function addLikeHandler(e) {
+	      _LikeStore2.default.toggleItem(this.props.product);
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      var _props$product = this.props.product;
@@ -21085,10 +21132,14 @@
 	        _react2.default.createElement("img", { className: "product__add__icon", src: "img/cart-icon.svg" })
 	      );
 	
-	      var item = _CartStore2.default.getItem(id);
+	      var cartItems = this.props.cartItems;
+	      var item = cartItems[id];
 	      if (item != null) {
 	        addIcon = _react2.default.createElement(_QuantityControl2.default, { quantity: item.quantity, pid: id, style: "gray" });
 	      }
+	
+	      var likeItems = this.props.likeItems;
+	      var heartIcon = likeItems && likeItems[id] ? "img/heart-liked.svg" : "img/heart.svg";
 	
 	      return _react2.default.createElement(
 	        "div",
@@ -21120,7 +21171,7 @@
 	            { className: "product__name" },
 	            name
 	          ),
-	          _react2.default.createElement("img", { className: "product__heart", src: "img/heart.svg" })
+	          _react2.default.createElement("img", { className: "product__heart", src: heartIcon, onClick: this.addLikeHandler.bind(this) })
 	        )
 	      );
 	    }
@@ -21139,17 +21190,17 @@
 	  }
 	
 	  _createClass(Products, [{
-	    key: "componentDidMount",
-	    value: function componentDidMount() {
-	      _CartStore2.default.addChangeListener(this.forceUpdate.bind(this));
-	    }
-	  }, {
 	    key: "render",
 	    value: function render() {
-	      var shoes = this.props.data;
-	      var names = Object.keys(shoes);
-	      var products = names.map(function (name, index) {
-	        return _react2.default.createElement(Product, { key: index, product: shoes[name] });
+	
+	      var shoes = this.props.filteredProducts;
+	      var cartItems = this.props.cartItems;
+	      var likeItems = this.props.likeItems;
+	      var ids = Object.keys(shoes);
+	
+	      var products = ids.map(function (id, index) {
+	        return _react2.default.createElement(Product, { key: index, product: shoes[id],
+	          cartItems: cartItems, likeItems: likeItems });
 	      });
 	
 	      return _react2.default.createElement(
@@ -21163,13 +21214,32 @@
 	  return Products;
 	})(_react2.default.Component);
 	
-	exports.default = Products;
+	//@connect(CartStore, "cartItems")
+	//@connect(LikeStore, "likeItems")
+	
+	var ConnectedProducts = (function (_Products) {
+	  _inherits(ConnectedProducts, _Products);
+	
+	  function ConnectedProducts() {
+	    _classCallCheck(this, ConnectedProducts);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ConnectedProducts).apply(this, arguments));
+	  }
+	
+	  return ConnectedProducts;
+	})(Products);
+	
+	ConnectedProducts = (0, _connect2.default)(_CartStore2.default, "cartItems")(ConnectedProducts);
+	ConnectedProducts = (0, _connect2.default)(_LikeStore2.default, "likeItems")(ConnectedProducts);
+	ConnectedProducts = (0, _connect2.default)(_ProductStore2.default, "filteredProducts")(ConnectedProducts);
+	
+	exports.default = ConnectedProducts;
 
 /***/ },
 /* 159 */
-/*!*******************************!*\
-  !*** ./js/component/Cart.jsx ***!
-  \*******************************/
+/*!******************************************!*\
+  !*** ./js/component/QuantityControl.jsx ***!
+  \******************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21184,15 +21254,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _QuantityControl = __webpack_require__(/*! ./QuantityControl.jsx */ 185);
-	
-	var _QuantityControl2 = _interopRequireDefault(_QuantityControl);
-	
-	var _perfectScrollbar = __webpack_require__(/*! perfect-scrollbar */ 160);
-	
-	var _perfectScrollbar2 = _interopRequireDefault(_perfectScrollbar);
-	
-	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 183);
+	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 160);
 	
 	var _CartStore2 = _interopRequireDefault(_CartStore);
 	
@@ -21204,2062 +21266,64 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var CartItem = (function (_React$Component) {
-	  _inherits(CartItem, _React$Component);
+	var QuantityControl = (function (_React$Component) {
+	  _inherits(QuantityControl, _React$Component);
 	
-	  function CartItem() {
-	    _classCallCheck(this, CartItem);
+	  function QuantityControl() {
+	    _classCallCheck(this, QuantityControl);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(CartItem).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(QuantityControl).apply(this, arguments));
 	  }
 	
-	  _createClass(CartItem, [{
-	    key: 'removeSelfHandler',
-	    value: function removeSelfHandler() {
-	      _CartStore2.default.removeItem(this.props.line.id);
+	  _createClass(QuantityControl, [{
+	    key: 'add',
+	    value: function add() {
+	      _CartStore2.default.addItemQuantity(this.props.pid);
+	    }
+	  }, {
+	    key: 'sub',
+	    value: function sub() {
+	      _CartStore2.default.subItemQuantity(this.props.pid);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props$line = this.props.line;
-	      var id = _props$line.id;
-	      var name = _props$line.name;
-	      var imagePath = _props$line.imagePath;
-	      var price = _props$line.price;
-	      var quantity = _props$line.quantity;
+	      var quantity = this.props.quantity;
+	      var className = this.props.style ? "adjust-qty adjust-qty--gray" : "adjust-qty";
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'cart-item' },
+	        { className: className },
 	        _react2.default.createElement(
-	          'div',
-	          { className: 'cart-item__top-part' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'cart-item__image' },
-	            _react2.default.createElement('img', { src: imagePath })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'cart-item__top-part__middle' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'cart-item__title' },
-	              name
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'cart-item__price' },
-	              '$' + price
-	            )
-	          ),
-	          _react2.default.createElement('img', { className: 'cart-item__trash', src: 'img/trash-icon.svg',
-	            onClick: this.removeSelfHandler.bind(this)
-	          })
-	        ),
-	        ' ',
-	        _react2.default.createElement(_QuantityControl2.default, { quantity: quantity, pid: id })
-	      );
-	    }
-	  }]);
-	
-	  return CartItem;
-	})(_react2.default.Component);
-	
-	var Cart = (function (_React$Component2) {
-	  _inherits(Cart, _React$Component2);
-	
-	  function Cart() {
-	    _classCallCheck(this, Cart);
-	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Cart).apply(this, arguments));
-	  }
-	
-	  _createClass(Cart, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var cart = _react2.default.findDOMNode(this.refs.cart);
-	      _perfectScrollbar2.default.initialize(cart);
-	
-	      _CartStore2.default.addChangeListener(this.forceUpdate.bind(this));
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	
-	      var cartItems = _CartStore2.default.getCartItems();
-	      var ids = Object.keys(cartItems);
-	      var items = ids.map(function (id, index) {
-	        return _react2.default.createElement(CartItem, { key: index, line: cartItems[id] });
-	      });
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'cart' },
-	        _react2.default.createElement(
-	          'h3',
-	          { className: 'cart__title' },
-	          'Shopping Cart'
+	          'a',
+	          { className: 'adjust-qty__button',
+	            onClick: this.sub.bind(this)
+	          },
+	          '-'
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'cart__content', ref: 'cart' },
-	          items
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return Cart;
-	})(_react2.default.Component);
-	
-	exports.default = Cart;
-
-/***/ },
-/* 160 */
-/*!**************************************!*\
-  !*** ./~/perfect-scrollbar/index.js ***!
-  \**************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	module.exports = __webpack_require__(/*! ./src/js/main */ 161);
-
-
-/***/ },
-/* 161 */
-/*!********************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/main.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var destroy = __webpack_require__(/*! ./plugin/destroy */ 162)
-	  , initialize = __webpack_require__(/*! ./plugin/initialize */ 170)
-	  , update = __webpack_require__(/*! ./plugin/update */ 180);
-	
-	module.exports = {
-	  initialize: initialize,
-	  update: update,
-	  destroy: destroy
-	};
-
-
-/***/ },
-/* 162 */
-/*!******************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/destroy.js ***!
-  \******************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var d = __webpack_require__(/*! ../lib/dom */ 163)
-	  , h = __webpack_require__(/*! ../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ./instances */ 166);
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	
-	  if (!i) {
-	    return;
-	  }
-	
-	  i.event.unbindAll();
-	  d.remove(i.scrollbarX);
-	  d.remove(i.scrollbarY);
-	  d.remove(i.scrollbarXRail);
-	  d.remove(i.scrollbarYRail);
-	  h.removePsClasses(element);
-	
-	  instances.remove(element);
-	};
-
-
-/***/ },
-/* 163 */
-/*!***********************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/lib/dom.js ***!
-  \***********************************************/
-/***/ function(module, exports) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var DOM = {};
-	
-	DOM.e = function (tagName, className) {
-	  var element = document.createElement(tagName);
-	  element.className = className;
-	  return element;
-	};
-	
-	DOM.appendTo = function (child, parent) {
-	  parent.appendChild(child);
-	  return child;
-	};
-	
-	function cssGet(element, styleName) {
-	  return window.getComputedStyle(element)[styleName];
-	}
-	
-	function cssSet(element, styleName, styleValue) {
-	  if (typeof styleValue === 'number') {
-	    styleValue = styleValue.toString() + 'px';
-	  }
-	  element.style[styleName] = styleValue;
-	  return element;
-	}
-	
-	function cssMultiSet(element, obj) {
-	  for (var key in obj) {
-	    var val = obj[key];
-	    if (typeof val === 'number') {
-	      val = val.toString() + 'px';
-	    }
-	    element.style[key] = val;
-	  }
-	  return element;
-	}
-	
-	DOM.css = function (element, styleNameOrObject, styleValue) {
-	  if (typeof styleNameOrObject === 'object') {
-	    // multiple set with object
-	    return cssMultiSet(element, styleNameOrObject);
-	  } else {
-	    if (typeof styleValue === 'undefined') {
-	      return cssGet(element, styleNameOrObject);
-	    } else {
-	      return cssSet(element, styleNameOrObject, styleValue);
-	    }
-	  }
-	};
-	
-	DOM.matches = function (element, query) {
-	  if (typeof element.matches !== 'undefined') {
-	    return element.matches(query);
-	  } else {
-	    if (typeof element.matchesSelector !== 'undefined') {
-	      return element.matchesSelector(query);
-	    } else if (typeof element.webkitMatchesSelector !== 'undefined') {
-	      return element.webkitMatchesSelector(query);
-	    } else if (typeof element.mozMatchesSelector !== 'undefined') {
-	      return element.mozMatchesSelector(query);
-	    } else if (typeof element.msMatchesSelector !== 'undefined') {
-	      return element.msMatchesSelector(query);
-	    }
-	  }
-	};
-	
-	DOM.remove = function (element) {
-	  if (typeof element.remove !== 'undefined') {
-	    element.remove();
-	  } else {
-	    if (element.parentNode) {
-	      element.parentNode.removeChild(element);
-	    }
-	  }
-	};
-	
-	DOM.queryChildren = function (element, selector) {
-	  return Array.prototype.filter.call(element.childNodes, function (child) {
-	    return DOM.matches(child, selector);
-	  });
-	};
-	
-	module.exports = DOM;
-
-
-/***/ },
-/* 164 */
-/*!**************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/lib/helper.js ***!
-  \**************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var cls = __webpack_require__(/*! ./class */ 165)
-	  , d = __webpack_require__(/*! ./dom */ 163);
-	
-	exports.toInt = function (x) {
-	  return parseInt(x, 10) || 0;
-	};
-	
-	exports.clone = function (obj) {
-	  if (obj === null) {
-	    return null;
-	  } else if (typeof obj === 'object') {
-	    var result = {};
-	    for (var key in obj) {
-	      result[key] = this.clone(obj[key]);
-	    }
-	    return result;
-	  } else {
-	    return obj;
-	  }
-	};
-	
-	exports.extend = function (original, source) {
-	  var result = this.clone(original);
-	  for (var key in source) {
-	    result[key] = this.clone(source[key]);
-	  }
-	  return result;
-	};
-	
-	exports.isEditable = function (el) {
-	  return d.matches(el, "input,[contenteditable]") ||
-	         d.matches(el, "select,[contenteditable]") ||
-	         d.matches(el, "textarea,[contenteditable]") ||
-	         d.matches(el, "button,[contenteditable]");
-	};
-	
-	exports.removePsClasses = function (element) {
-	  var clsList = cls.list(element);
-	  for (var i = 0; i < clsList.length; i++) {
-	    var className = clsList[i];
-	    if (className.indexOf('ps-') === 0) {
-	      cls.remove(element, className);
-	    }
-	  }
-	};
-	
-	exports.outerWidth = function (element) {
-	  return this.toInt(d.css(element, 'width')) +
-	         this.toInt(d.css(element, 'paddingLeft')) +
-	         this.toInt(d.css(element, 'paddingRight')) +
-	         this.toInt(d.css(element, 'borderLeftWidth')) +
-	         this.toInt(d.css(element, 'borderRightWidth'));
-	};
-	
-	exports.startScrolling = function (element, axis) {
-	  cls.add(element, 'ps-in-scrolling');
-	  if (typeof axis !== 'undefined') {
-	    cls.add(element, 'ps-' + axis);
-	  } else {
-	    cls.add(element, 'ps-x');
-	    cls.add(element, 'ps-y');
-	  }
-	};
-	
-	exports.stopScrolling = function (element, axis) {
-	  cls.remove(element, 'ps-in-scrolling');
-	  if (typeof axis !== 'undefined') {
-	    cls.remove(element, 'ps-' + axis);
-	  } else {
-	    cls.remove(element, 'ps-x');
-	    cls.remove(element, 'ps-y');
-	  }
-	};
-	
-	exports.env = {
-	  isWebKit: 'WebkitAppearance' in document.documentElement.style,
-	  supportsTouch: (('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch),
-	  supportsIePointer: window.navigator.msMaxTouchPoints !== null
-	};
-
-
-/***/ },
-/* 165 */
-/*!*************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/lib/class.js ***!
-  \*************************************************/
-/***/ function(module, exports) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	function oldAdd(element, className) {
-	  var classes = element.className.split(' ');
-	  if (classes.indexOf(className) < 0) {
-	    classes.push(className);
-	  }
-	  element.className = classes.join(' ');
-	}
-	
-	function oldRemove(element, className) {
-	  var classes = element.className.split(' ');
-	  var idx = classes.indexOf(className);
-	  if (idx >= 0) {
-	    classes.splice(idx, 1);
-	  }
-	  element.className = classes.join(' ');
-	}
-	
-	exports.add = function (element, className) {
-	  if (element.classList) {
-	    element.classList.add(className);
-	  } else {
-	    oldAdd(element, className);
-	  }
-	};
-	
-	exports.remove = function (element, className) {
-	  if (element.classList) {
-	    element.classList.remove(className);
-	  } else {
-	    oldRemove(element, className);
-	  }
-	};
-	
-	exports.list = function (element) {
-	  if (element.classList) {
-	    return Array.prototype.slice.apply(element.classList);
-	  } else {
-	    return element.className.split(' ');
-	  }
-	};
-
-
-/***/ },
-/* 166 */
-/*!********************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/instances.js ***!
-  \********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var d = __webpack_require__(/*! ../lib/dom */ 163)
-	  , defaultSettings = __webpack_require__(/*! ./default-setting */ 167)
-	  , EventManager = __webpack_require__(/*! ../lib/event-manager */ 168)
-	  , guid = __webpack_require__(/*! ../lib/guid */ 169)
-	  , h = __webpack_require__(/*! ../lib/helper */ 164);
-	
-	var instances = {};
-	
-	function Instance(element) {
-	  var i = this;
-	
-	  i.settings = h.clone(defaultSettings);
-	  i.containerWidth = null;
-	  i.containerHeight = null;
-	  i.contentWidth = null;
-	  i.contentHeight = null;
-	
-	  i.isRtl = d.css(element, 'direction') === "rtl";
-	  i.isNegativeScroll = (function () {
-	    var originalScrollLeft = element.scrollLeft;
-	    var result = null;
-	    element.scrollLeft = -1;
-	    result = element.scrollLeft < 0;
-	    element.scrollLeft = originalScrollLeft;
-	    return result;
-	  })();
-	  i.negativeScrollAdjustment = i.isNegativeScroll ? element.scrollWidth - element.clientWidth : 0;
-	  i.event = new EventManager();
-	  i.ownerDocument = element.ownerDocument || document;
-	
-	  i.scrollbarXRail = d.appendTo(d.e('div', 'ps-scrollbar-x-rail'), element);
-	  i.scrollbarX = d.appendTo(d.e('div', 'ps-scrollbar-x'), i.scrollbarXRail);
-	  i.scrollbarXActive = null;
-	  i.scrollbarXWidth = null;
-	  i.scrollbarXLeft = null;
-	  i.scrollbarXBottom = h.toInt(d.css(i.scrollbarXRail, 'bottom'));
-	  i.isScrollbarXUsingBottom = i.scrollbarXBottom === i.scrollbarXBottom; // !isNaN
-	  i.scrollbarXTop = i.isScrollbarXUsingBottom ? null : h.toInt(d.css(i.scrollbarXRail, 'top'));
-	  i.railBorderXWidth = h.toInt(d.css(i.scrollbarXRail, 'borderLeftWidth')) + h.toInt(d.css(i.scrollbarXRail, 'borderRightWidth'));
-	  // Set rail to display:block to calculate margins
-	  d.css(i.scrollbarXRail, 'display', 'block');
-	  i.railXMarginWidth = h.toInt(d.css(i.scrollbarXRail, 'marginLeft')) + h.toInt(d.css(i.scrollbarXRail, 'marginRight'));
-	  d.css(i.scrollbarXRail, 'display', '');
-	  i.railXWidth = null;
-	  i.railXRatio = null;
-	
-	  i.scrollbarYRail = d.appendTo(d.e('div', 'ps-scrollbar-y-rail'), element);
-	  i.scrollbarY = d.appendTo(d.e('div', 'ps-scrollbar-y'), i.scrollbarYRail);
-	  i.scrollbarYActive = null;
-	  i.scrollbarYHeight = null;
-	  i.scrollbarYTop = null;
-	  i.scrollbarYRight = h.toInt(d.css(i.scrollbarYRail, 'right'));
-	  i.isScrollbarYUsingRight = i.scrollbarYRight === i.scrollbarYRight; // !isNaN
-	  i.scrollbarYLeft = i.isScrollbarYUsingRight ? null : h.toInt(d.css(i.scrollbarYRail, 'left'));
-	  i.scrollbarYOuterWidth = i.isRtl ? h.outerWidth(i.scrollbarY) : null;
-	  i.railBorderYWidth = h.toInt(d.css(i.scrollbarYRail, 'borderTopWidth')) + h.toInt(d.css(i.scrollbarYRail, 'borderBottomWidth'));
-	  d.css(i.scrollbarYRail, 'display', 'block');
-	  i.railYMarginHeight = h.toInt(d.css(i.scrollbarYRail, 'marginTop')) + h.toInt(d.css(i.scrollbarYRail, 'marginBottom'));
-	  d.css(i.scrollbarYRail, 'display', '');
-	  i.railYHeight = null;
-	  i.railYRatio = null;
-	}
-	
-	function getId(element) {
-	  if (typeof element.dataset === 'undefined') {
-	    return element.getAttribute('data-ps-id');
-	  } else {
-	    return element.dataset.psId;
-	  }
-	}
-	
-	function setId(element, id) {
-	  if (typeof element.dataset === 'undefined') {
-	    element.setAttribute('data-ps-id', id);
-	  } else {
-	    element.dataset.psId = id;
-	  }
-	}
-	
-	function removeId(element) {
-	  if (typeof element.dataset === 'undefined') {
-	    element.removeAttribute('data-ps-id');
-	  } else {
-	    delete element.dataset.psId;
-	  }
-	}
-	
-	exports.add = function (element) {
-	  var newId = guid();
-	  setId(element, newId);
-	  instances[newId] = new Instance(element);
-	  return instances[newId];
-	};
-	
-	exports.remove = function (element) {
-	  delete instances[getId(element)];
-	  removeId(element);
-	};
-	
-	exports.get = function (element) {
-	  return instances[getId(element)];
-	};
-
-
-/***/ },
-/* 167 */
-/*!**************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/default-setting.js ***!
-  \**************************************************************/
-/***/ function(module, exports) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	module.exports = {
-	  maxScrollbarLength: null,
-	  minScrollbarLength: null,
-	  scrollXMarginOffset: 0,
-	  scrollYMarginOffset: 0,
-	  stopPropagationOnClick: true,
-	  suppressScrollX: false,
-	  suppressScrollY: false,
-	  swipePropagation: true,
-	  useBothWheelAxes: false,
-	  useKeyboard: true,
-	  useSelectionScroll: false,
-	  wheelPropagation: false,
-	  wheelSpeed: 1
-	};
-
-
-/***/ },
-/* 168 */
-/*!*********************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/lib/event-manager.js ***!
-  \*********************************************************/
-/***/ function(module, exports) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var EventElement = function (element) {
-	  this.element = element;
-	  this.events = {};
-	};
-	
-	EventElement.prototype.bind = function (eventName, handler) {
-	  if (typeof this.events[eventName] === 'undefined') {
-	    this.events[eventName] = [];
-	  }
-	  this.events[eventName].push(handler);
-	  this.element.addEventListener(eventName, handler, false);
-	};
-	
-	EventElement.prototype.unbind = function (eventName, handler) {
-	  var isHandlerProvided = (typeof handler !== 'undefined');
-	  this.events[eventName] = this.events[eventName].filter(function (hdlr) {
-	    if (isHandlerProvided && hdlr !== handler) {
-	      return true;
-	    }
-	    this.element.removeEventListener(eventName, hdlr, false);
-	    return false;
-	  }, this);
-	};
-	
-	EventElement.prototype.unbindAll = function () {
-	  for (var name in this.events) {
-	    this.unbind(name);
-	  }
-	};
-	
-	var EventManager = function () {
-	  this.eventElements = [];
-	};
-	
-	EventManager.prototype.eventElement = function (element) {
-	  var ee = this.eventElements.filter(function (eventElement) {
-	    return eventElement.element === element;
-	  })[0];
-	  if (typeof ee === 'undefined') {
-	    ee = new EventElement(element);
-	    this.eventElements.push(ee);
-	  }
-	  return ee;
-	};
-	
-	EventManager.prototype.bind = function (element, eventName, handler) {
-	  this.eventElement(element).bind(eventName, handler);
-	};
-	
-	EventManager.prototype.unbind = function (element, eventName, handler) {
-	  this.eventElement(element).unbind(eventName, handler);
-	};
-	
-	EventManager.prototype.unbindAll = function () {
-	  for (var i = 0; i < this.eventElements.length; i++) {
-	    this.eventElements[i].unbindAll();
-	  }
-	};
-	
-	EventManager.prototype.once = function (element, eventName, handler) {
-	  var ee = this.eventElement(element);
-	  var onceHandler = function (e) {
-	    ee.unbind(eventName, onceHandler);
-	    handler(e);
-	  };
-	  ee.bind(eventName, onceHandler);
-	};
-	
-	module.exports = EventManager;
-
-
-/***/ },
-/* 169 */
-/*!************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/lib/guid.js ***!
-  \************************************************/
-/***/ function(module, exports) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	module.exports = (function () {
-	  function s4() {
-	    return Math.floor((1 + Math.random()) * 0x10000)
-	               .toString(16)
-	               .substring(1);
-	  }
-	  return function () {
-	    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-	           s4() + '-' + s4() + s4() + s4();
-	  };
-	})();
-
-
-/***/ },
-/* 170 */
-/*!*********************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/initialize.js ***!
-  \*********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var cls = __webpack_require__(/*! ../lib/class */ 165)
-	  , h = __webpack_require__(/*! ../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ./instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 171);
-	
-	// Handlers
-	var clickRailHandler = __webpack_require__(/*! ./handler/click-rail */ 173)
-	  , dragScrollbarHandler = __webpack_require__(/*! ./handler/drag-scrollbar */ 174)
-	  , keyboardHandler = __webpack_require__(/*! ./handler/keyboard */ 175)
-	  , mouseWheelHandler = __webpack_require__(/*! ./handler/mouse-wheel */ 176)
-	  , nativeScrollHandler = __webpack_require__(/*! ./handler/native-scroll */ 177)
-	  , selectionHandler = __webpack_require__(/*! ./handler/selection */ 178)
-	  , touchHandler = __webpack_require__(/*! ./handler/touch */ 179);
-	
-	module.exports = function (element, userSettings) {
-	  userSettings = typeof userSettings === 'object' ? userSettings : {};
-	
-	  cls.add(element, 'ps-container');
-	
-	  // Create a plugin instance.
-	  var i = instances.add(element);
-	
-	  i.settings = h.extend(i.settings, userSettings);
-	
-	  clickRailHandler(element);
-	  dragScrollbarHandler(element);
-	  mouseWheelHandler(element);
-	  nativeScrollHandler(element);
-	
-	  if (i.settings.useSelectionScroll) {
-	    selectionHandler(element);
-	  }
-	
-	  if (h.env.supportsTouch || h.env.supportsIePointer) {
-	    touchHandler(element, h.env.supportsTouch, h.env.supportsIePointer);
-	  }
-	  if (i.settings.useKeyboard) {
-	    keyboardHandler(element);
-	  }
-	
-	  updateGeometry(element);
-	};
-
-
-/***/ },
-/* 171 */
-/*!**************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/update-geometry.js ***!
-  \**************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var cls = __webpack_require__(/*! ../lib/class */ 165)
-	  , d = __webpack_require__(/*! ../lib/dom */ 163)
-	  , h = __webpack_require__(/*! ../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ./instances */ 166)
-	  , updateScroll = __webpack_require__(/*! ./update-scroll */ 172);
-	
-	function getThumbSize(i, thumbSize) {
-	  if (i.settings.minScrollbarLength) {
-	    thumbSize = Math.max(thumbSize, i.settings.minScrollbarLength);
-	  }
-	  if (i.settings.maxScrollbarLength) {
-	    thumbSize = Math.min(thumbSize, i.settings.maxScrollbarLength);
-	  }
-	  return thumbSize;
-	}
-	
-	function updateCss(element, i) {
-	  var xRailOffset = {width: i.railXWidth};
-	  if (i.isRtl) {
-	    xRailOffset.left = i.negativeScrollAdjustment + element.scrollLeft + i.containerWidth - i.contentWidth;
-	  } else {
-	    xRailOffset.left = element.scrollLeft;
-	  }
-	  if (i.isScrollbarXUsingBottom) {
-	    xRailOffset.bottom = i.scrollbarXBottom - element.scrollTop;
-	  } else {
-	    xRailOffset.top = i.scrollbarXTop + element.scrollTop;
-	  }
-	  d.css(i.scrollbarXRail, xRailOffset);
-	
-	  var yRailOffset = {top: element.scrollTop, height: i.railYHeight};
-	  if (i.isScrollbarYUsingRight) {
-	    if (i.isRtl) {
-	      yRailOffset.right = i.contentWidth - (i.negativeScrollAdjustment + element.scrollLeft) - i.scrollbarYRight - i.scrollbarYOuterWidth;
-	    } else {
-	      yRailOffset.right = i.scrollbarYRight - element.scrollLeft;
-	    }
-	  } else {
-	    if (i.isRtl) {
-	      yRailOffset.left = i.negativeScrollAdjustment + element.scrollLeft + i.containerWidth * 2 - i.contentWidth - i.scrollbarYLeft - i.scrollbarYOuterWidth;
-	    } else {
-	      yRailOffset.left = i.scrollbarYLeft + element.scrollLeft;
-	    }
-	  }
-	  d.css(i.scrollbarYRail, yRailOffset);
-	
-	  d.css(i.scrollbarX, {left: i.scrollbarXLeft, width: i.scrollbarXWidth - i.railBorderXWidth});
-	  d.css(i.scrollbarY, {top: i.scrollbarYTop, height: i.scrollbarYHeight - i.railBorderYWidth});
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	
-	  i.containerWidth = element.clientWidth;
-	  i.containerHeight = element.clientHeight;
-	  i.contentWidth = element.scrollWidth;
-	  i.contentHeight = element.scrollHeight;
-	
-	  var existingRails;
-	  if (!element.contains(i.scrollbarXRail)) {
-	    existingRails = d.queryChildren(element, '.ps-scrollbar-x-rail');
-	    if (existingRails.length > 0) {
-	      existingRails.forEach(function (rail) {
-	        d.remove(rail);
-	      });
-	    }
-	    d.appendTo(i.scrollbarXRail, element);
-	  }
-	  if (!element.contains(i.scrollbarYRail)) {
-	    existingRails = d.queryChildren(element, '.ps-scrollbar-y-rail');
-	    if (existingRails.length > 0) {
-	      existingRails.forEach(function (rail) {
-	        d.remove(rail);
-	      });
-	    }
-	    d.appendTo(i.scrollbarYRail, element);
-	  }
-	
-	  if (!i.settings.suppressScrollX && i.containerWidth + i.settings.scrollXMarginOffset < i.contentWidth) {
-	    i.scrollbarXActive = true;
-	    i.railXWidth = i.containerWidth - i.railXMarginWidth;
-	    i.railXRatio = i.containerWidth / i.railXWidth;
-	    i.scrollbarXWidth = getThumbSize(i, h.toInt(i.railXWidth * i.containerWidth / i.contentWidth));
-	    i.scrollbarXLeft = h.toInt((i.negativeScrollAdjustment + element.scrollLeft) * (i.railXWidth - i.scrollbarXWidth) / (i.contentWidth - i.containerWidth));
-	  } else {
-	    i.scrollbarXActive = false;
-	    i.scrollbarXWidth = 0;
-	    i.scrollbarXLeft = 0;
-	    element.scrollLeft = 0;
-	  }
-	
-	  if (!i.settings.suppressScrollY && i.containerHeight + i.settings.scrollYMarginOffset < i.contentHeight) {
-	    i.scrollbarYActive = true;
-	    i.railYHeight = i.containerHeight - i.railYMarginHeight;
-	    i.railYRatio = i.containerHeight / i.railYHeight;
-	    i.scrollbarYHeight = getThumbSize(i, h.toInt(i.railYHeight * i.containerHeight / i.contentHeight));
-	    i.scrollbarYTop = h.toInt(element.scrollTop * (i.railYHeight - i.scrollbarYHeight) / (i.contentHeight - i.containerHeight));
-	  } else {
-	    i.scrollbarYActive = false;
-	    i.scrollbarYHeight = 0;
-	    i.scrollbarYTop = 0;
-	    updateScroll(element, 'top', 0);
-	  }
-	
-	  if (i.scrollbarXLeft >= i.railXWidth - i.scrollbarXWidth) {
-	    i.scrollbarXLeft = i.railXWidth - i.scrollbarXWidth;
-	  }
-	  if (i.scrollbarYTop >= i.railYHeight - i.scrollbarYHeight) {
-	    i.scrollbarYTop = i.railYHeight - i.scrollbarYHeight;
-	  }
-	
-	  updateCss(element, i);
-	
-	  cls[i.scrollbarXActive ? 'add' : 'remove'](element, 'ps-active-x');
-	  cls[i.scrollbarYActive ? 'add' : 'remove'](element, 'ps-active-y');
-	};
-
-
-/***/ },
-/* 172 */
-/*!************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/update-scroll.js ***!
-  \************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var instances = __webpack_require__(/*! ./instances */ 166);
-	
-	var upEvent = document.createEvent('Event')
-	  , downEvent = document.createEvent('Event')
-	  , leftEvent = document.createEvent('Event')
-	  , rightEvent = document.createEvent('Event')
-	  , yEvent = document.createEvent('Event')
-	  , xEvent = document.createEvent('Event')
-	  , xStartEvent = document.createEvent('Event')
-	  , xEndEvent = document.createEvent('Event')
-	  , yStartEvent = document.createEvent('Event')
-	  , yEndEvent = document.createEvent('Event')
-	  , lastTop
-	  , lastLeft;
-	
-	upEvent.initEvent('ps-scroll-up', true, true);
-	downEvent.initEvent('ps-scroll-down', true, true);
-	leftEvent.initEvent('ps-scroll-left', true, true);
-	rightEvent.initEvent('ps-scroll-right', true, true);
-	yEvent.initEvent('ps-scroll-y', true, true);
-	xEvent.initEvent('ps-scroll-x', true, true);
-	xStartEvent.initEvent('ps-x-reach-start', true, true);
-	xEndEvent.initEvent('ps-x-reach-end', true, true);
-	yStartEvent.initEvent('ps-y-reach-start', true, true);
-	yEndEvent.initEvent('ps-y-reach-end', true, true);
-	
-	module.exports = function (element, axis, value) {
-	  if (typeof element === 'undefined') {
-	    throw 'You must provide an element to the update-scroll function';
-	  }
-	
-	  if (typeof axis === 'undefined') {
-	    throw 'You must provide an axis to the update-scroll function';
-	  }
-	
-	  if (typeof value === 'undefined') {
-	    throw 'You must provide a value to the update-scroll function';
-	  }
-	
-	  if (axis === 'top' && value <= 0) {
-	    element.scrollTop = 0;
-	    element.dispatchEvent(yStartEvent);
-	    return; // don't allow negative scroll
-	  }
-	
-	  if (axis === 'left' && value <= 0) {
-	    element.scrollLeft = 0;
-	    element.dispatchEvent(xStartEvent);
-	    return; // don't allow negative scroll
-	  }
-	
-	  var i = instances.get(element);
-	
-	  if (axis === 'top' && value > i.contentHeight - i.containerHeight) {
-	    element.scrollTop = i.contentHeight - i.containerHeight;
-	    element.dispatchEvent(yEndEvent);
-	    return; // don't allow scroll past container
-	  }
-	
-	  if (axis === 'left' && value > i.contentWidth - i.containerWidth) {
-	    element.scrollLeft = i.contentWidth - i.containerWidth;
-	    element.dispatchEvent(xEndEvent);
-	    return; // don't allow scroll past container
-	  }
-	
-	  if (!lastTop) {
-	    lastTop = element.scrollTop;
-	  }
-	
-	  if (!lastLeft) {
-	    lastLeft = element.scrollLeft;
-	  }
-	
-	  if (axis === 'top' && value < lastTop) {
-	    element.dispatchEvent(upEvent);
-	  }
-	
-	  if (axis === 'top' && value > lastTop) {
-	    element.dispatchEvent(downEvent);
-	  }
-	
-	  if (axis === 'left' && value < lastLeft) {
-	    element.dispatchEvent(leftEvent);
-	  }
-	
-	  if (axis === 'left' && value > lastLeft) {
-	    element.dispatchEvent(rightEvent);
-	  }
-	
-	  if (axis === 'top') {
-	    element.scrollTop = lastTop = value;
-	    element.dispatchEvent(yEvent);
-	  }
-	
-	  if (axis === 'left') {
-	    element.scrollLeft = lastLeft = value;
-	    element.dispatchEvent(xEvent);
-	  }
-	
-	};
-
-
-/***/ },
-/* 173 */
-/*!*****************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/click-rail.js ***!
-  \*****************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var h = __webpack_require__(/*! ../../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
-	
-	function bindClickRailHandler(element, i) {
-	  function pageOffset(el) {
-	    return el.getBoundingClientRect();
-	  }
-	  var stopPropagation = window.Event.prototype.stopPropagation.bind;
-	
-	  if (i.settings.stopPropagationOnClick) {
-	    i.event.bind(i.scrollbarY, 'click', stopPropagation);
-	  }
-	  i.event.bind(i.scrollbarYRail, 'click', function (e) {
-	    var halfOfScrollbarLength = h.toInt(i.scrollbarYHeight / 2);
-	    var positionTop = i.railYRatio * (e.pageY - window.scrollY - pageOffset(i.scrollbarYRail).top - halfOfScrollbarLength);
-	    var maxPositionTop = i.railYRatio * (i.railYHeight - i.scrollbarYHeight);
-	    var positionRatio = positionTop / maxPositionTop;
-	
-	    if (positionRatio < 0) {
-	      positionRatio = 0;
-	    } else if (positionRatio > 1) {
-	      positionRatio = 1;
-	    }
-	
-	    updateScroll(element, 'top', (i.contentHeight - i.containerHeight) * positionRatio);
-	    updateGeometry(element);
-	
-	    e.stopPropagation();
-	  });
-	
-	  if (i.settings.stopPropagationOnClick) {
-	    i.event.bind(i.scrollbarX, 'click', stopPropagation);
-	  }
-	  i.event.bind(i.scrollbarXRail, 'click', function (e) {
-	    var halfOfScrollbarLength = h.toInt(i.scrollbarXWidth / 2);
-	    var positionLeft = i.railXRatio * (e.pageX - window.scrollX - pageOffset(i.scrollbarXRail).left - halfOfScrollbarLength);
-	    var maxPositionLeft = i.railXRatio * (i.railXWidth - i.scrollbarXWidth);
-	    var positionRatio = positionLeft / maxPositionLeft;
-	
-	    if (positionRatio < 0) {
-	      positionRatio = 0;
-	    } else if (positionRatio > 1) {
-	      positionRatio = 1;
-	    }
-	
-	    updateScroll(element, 'left', ((i.contentWidth - i.containerWidth) * positionRatio) - i.negativeScrollAdjustment);
-	    updateGeometry(element);
-	
-	    e.stopPropagation();
-	  });
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	  bindClickRailHandler(element, i);
-	};
-
-
-/***/ },
-/* 174 */
-/*!*********************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/drag-scrollbar.js ***!
-  \*********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var d = __webpack_require__(/*! ../../lib/dom */ 163)
-	  , h = __webpack_require__(/*! ../../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
-	
-	function bindMouseScrollXHandler(element, i) {
-	  var currentLeft = null;
-	  var currentPageX = null;
-	
-	  function updateScrollLeft(deltaX) {
-	    var newLeft = currentLeft + (deltaX * i.railXRatio);
-	    var maxLeft = i.scrollbarXRail.getBoundingClientRect().left + (i.railXRatio * (i.railXWidth - i.scrollbarXWidth));
-	
-	    if (newLeft < 0) {
-	      i.scrollbarXLeft = 0;
-	    } else if (newLeft > maxLeft) {
-	      i.scrollbarXLeft = maxLeft;
-	    } else {
-	      i.scrollbarXLeft = newLeft;
-	    }
-	
-	    var scrollLeft = h.toInt(i.scrollbarXLeft * (i.contentWidth - i.containerWidth) / (i.containerWidth - (i.railXRatio * i.scrollbarXWidth))) - i.negativeScrollAdjustment;
-	    updateScroll(element, 'left', scrollLeft);
-	  }
-	
-	  var mouseMoveHandler = function (e) {
-	    updateScrollLeft(e.pageX - currentPageX);
-	    updateGeometry(element);
-	    e.stopPropagation();
-	    e.preventDefault();
-	  };
-	
-	  var mouseUpHandler = function () {
-	    h.stopScrolling(element, 'x');
-	    i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
-	  };
-	
-	  i.event.bind(i.scrollbarX, 'mousedown', function (e) {
-	    currentPageX = e.pageX;
-	    currentLeft = h.toInt(d.css(i.scrollbarX, 'left')) * i.railXRatio;
-	    h.startScrolling(element, 'x');
-	
-	    i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
-	    i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
-	
-	    e.stopPropagation();
-	    e.preventDefault();
-	  });
-	}
-	
-	function bindMouseScrollYHandler(element, i) {
-	  var currentTop = null;
-	  var currentPageY = null;
-	
-	  function updateScrollTop(deltaY) {
-	    var newTop = currentTop + (deltaY * i.railYRatio);
-	    var maxTop = i.scrollbarYRail.getBoundingClientRect().top + (i.railYRatio * (i.railYHeight - i.scrollbarYHeight));
-	
-	    if (newTop < 0) {
-	      i.scrollbarYTop = 0;
-	    } else if (newTop > maxTop) {
-	      i.scrollbarYTop = maxTop;
-	    } else {
-	      i.scrollbarYTop = newTop;
-	    }
-	
-	    var scrollTop = h.toInt(i.scrollbarYTop * (i.contentHeight - i.containerHeight) / (i.containerHeight - (i.railYRatio * i.scrollbarYHeight)));
-	    updateScroll(element, 'top', scrollTop);
-	  }
-	
-	  var mouseMoveHandler = function (e) {
-	    updateScrollTop(e.pageY - currentPageY);
-	    updateGeometry(element);
-	    e.stopPropagation();
-	    e.preventDefault();
-	  };
-	
-	  var mouseUpHandler = function () {
-	    h.stopScrolling(element, 'y');
-	    i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
-	  };
-	
-	  i.event.bind(i.scrollbarY, 'mousedown', function (e) {
-	    currentPageY = e.pageY;
-	    currentTop = h.toInt(d.css(i.scrollbarY, 'top')) * i.railYRatio;
-	    h.startScrolling(element, 'y');
-	
-	    i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
-	    i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
-	
-	    e.stopPropagation();
-	    e.preventDefault();
-	  });
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	  bindMouseScrollXHandler(element, i);
-	  bindMouseScrollYHandler(element, i);
-	};
-
-
-/***/ },
-/* 175 */
-/*!***************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/keyboard.js ***!
-  \***************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var h = __webpack_require__(/*! ../../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
-	
-	function bindKeyboardHandler(element, i) {
-	  var hovered = false;
-	  i.event.bind(element, 'mouseenter', function () {
-	    hovered = true;
-	  });
-	  i.event.bind(element, 'mouseleave', function () {
-	    hovered = false;
-	  });
-	
-	  var shouldPrevent = false;
-	  function shouldPreventDefault(deltaX, deltaY) {
-	    var scrollTop = element.scrollTop;
-	    if (deltaX === 0) {
-	      if (!i.scrollbarYActive) {
-	        return false;
-	      }
-	      if ((scrollTop === 0 && deltaY > 0) || (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)) {
-	        return !i.settings.wheelPropagation;
-	      }
-	    }
-	
-	    var scrollLeft = element.scrollLeft;
-	    if (deltaY === 0) {
-	      if (!i.scrollbarXActive) {
-	        return false;
-	      }
-	      if ((scrollLeft === 0 && deltaX < 0) || (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)) {
-	        return !i.settings.wheelPropagation;
-	      }
-	    }
-	    return true;
-	  }
-	
-	  i.event.bind(i.ownerDocument, 'keydown', function (e) {
-	    if (e.isDefaultPrevented && e.isDefaultPrevented()) {
-	      return;
-	    }
-	
-	    if (!hovered) {
-	      return;
-	    }
-	
-	    var activeElement = document.activeElement ? document.activeElement : i.ownerDocument.activeElement;
-	    if (activeElement) {
-	      // go deeper if element is a webcomponent
-	      while (activeElement.shadowRoot) {
-	        activeElement = activeElement.shadowRoot.activeElement;
-	      }
-	      if (h.isEditable(activeElement)) {
-	        return;
-	      }
-	    }
-	
-	    var deltaX = 0;
-	    var deltaY = 0;
-	
-	    switch (e.which) {
-	    case 37: // left
-	      deltaX = -30;
-	      break;
-	    case 38: // up
-	      deltaY = 30;
-	      break;
-	    case 39: // right
-	      deltaX = 30;
-	      break;
-	    case 40: // down
-	      deltaY = -30;
-	      break;
-	    case 33: // page up
-	      deltaY = 90;
-	      break;
-	    case 32: // space bar
-	      if (e.shiftKey) {
-	        deltaY = 90;
-	      } else {
-	        deltaY = -90;
-	      }
-	      break;
-	    case 34: // page down
-	      deltaY = -90;
-	      break;
-	    case 35: // end
-	      if (e.ctrlKey) {
-	        deltaY = -i.contentHeight;
-	      } else {
-	        deltaY = -i.containerHeight;
-	      }
-	      break;
-	    case 36: // home
-	      if (e.ctrlKey) {
-	        deltaY = element.scrollTop;
-	      } else {
-	        deltaY = i.containerHeight;
-	      }
-	      break;
-	    default:
-	      return;
-	    }
-	
-	    updateScroll(element, 'top', element.scrollTop - deltaY);
-	    updateScroll(element, 'left', element.scrollLeft + deltaX);
-	    updateGeometry(element);
-	
-	    shouldPrevent = shouldPreventDefault(deltaX, deltaY);
-	    if (shouldPrevent) {
-	      e.preventDefault();
-	    }
-	  });
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	  bindKeyboardHandler(element, i);
-	};
-
-
-/***/ },
-/* 176 */
-/*!******************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/mouse-wheel.js ***!
-  \******************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var h = __webpack_require__(/*! ../../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
-	
-	function bindMouseWheelHandler(element, i) {
-	  var shouldPrevent = false;
-	
-	  function shouldPreventDefault(deltaX, deltaY) {
-	    var scrollTop = element.scrollTop;
-	    if (deltaX === 0) {
-	      if (!i.scrollbarYActive) {
-	        return false;
-	      }
-	      if ((scrollTop === 0 && deltaY > 0) || (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)) {
-	        return !i.settings.wheelPropagation;
-	      }
-	    }
-	
-	    var scrollLeft = element.scrollLeft;
-	    if (deltaY === 0) {
-	      if (!i.scrollbarXActive) {
-	        return false;
-	      }
-	      if ((scrollLeft === 0 && deltaX < 0) || (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)) {
-	        return !i.settings.wheelPropagation;
-	      }
-	    }
-	    return true;
-	  }
-	
-	  function getDeltaFromEvent(e) {
-	    var deltaX = e.deltaX;
-	    var deltaY = -1 * e.deltaY;
-	
-	    if (typeof deltaX === "undefined" || typeof deltaY === "undefined") {
-	      // OS X Safari
-	      deltaX = -1 * e.wheelDeltaX / 6;
-	      deltaY = e.wheelDeltaY / 6;
-	    }
-	
-	    if (e.deltaMode && e.deltaMode === 1) {
-	      // Firefox in deltaMode 1: Line scrolling
-	      deltaX *= 10;
-	      deltaY *= 10;
-	    }
-	
-	    if (deltaX !== deltaX && deltaY !== deltaY/* NaN checks */) {
-	      // IE in some mouse drivers
-	      deltaX = 0;
-	      deltaY = e.wheelDelta;
-	    }
-	
-	    return [deltaX, deltaY];
-	  }
-	
-	  function shouldBeConsumedByTextarea(deltaX, deltaY) {
-	    var hoveredTextarea = element.querySelector('textarea:hover');
-	    if (hoveredTextarea) {
-	      var maxScrollTop = hoveredTextarea.scrollHeight - hoveredTextarea.clientHeight;
-	      if (maxScrollTop > 0) {
-	        if (!(hoveredTextarea.scrollTop === 0 && deltaY > 0) &&
-	            !(hoveredTextarea.scrollTop === maxScrollTop && deltaY < 0)) {
-	          return true;
-	        }
-	      }
-	      var maxScrollLeft = hoveredTextarea.scrollLeft - hoveredTextarea.clientWidth;
-	      if (maxScrollLeft > 0) {
-	        if (!(hoveredTextarea.scrollLeft === 0 && deltaX < 0) &&
-	            !(hoveredTextarea.scrollLeft === maxScrollLeft && deltaX > 0)) {
-	          return true;
-	        }
-	      }
-	    }
-	    return false;
-	  }
-	
-	  function mousewheelHandler(e) {
-	    // FIXME: this is a quick fix for the select problem in FF and IE.
-	    // If there comes an effective way to deal with the problem,
-	    // this lines should be removed.
-	    if (!h.env.isWebKit && element.querySelector('select:focus')) {
-	      return;
-	    }
-	
-	    var delta = getDeltaFromEvent(e);
-	
-	    var deltaX = delta[0];
-	    var deltaY = delta[1];
-	
-	    if (shouldBeConsumedByTextarea(deltaX, deltaY)) {
-	      return;
-	    }
-	
-	    shouldPrevent = false;
-	    if (!i.settings.useBothWheelAxes) {
-	      // deltaX will only be used for horizontal scrolling and deltaY will
-	      // only be used for vertical scrolling - this is the default
-	      updateScroll(element, 'top', element.scrollTop - (deltaY * i.settings.wheelSpeed));
-	      updateScroll(element, 'left', element.scrollLeft + (deltaX * i.settings.wheelSpeed));
-	    } else if (i.scrollbarYActive && !i.scrollbarXActive) {
-	      // only vertical scrollbar is active and useBothWheelAxes option is
-	      // active, so let's scroll vertical bar using both mouse wheel axes
-	      if (deltaY) {
-	        updateScroll(element, 'top', element.scrollTop - (deltaY * i.settings.wheelSpeed));
-	      } else {
-	        updateScroll(element, 'top', element.scrollTop + (deltaX * i.settings.wheelSpeed));
-	      }
-	      shouldPrevent = true;
-	    } else if (i.scrollbarXActive && !i.scrollbarYActive) {
-	      // useBothWheelAxes and only horizontal bar is active, so use both
-	      // wheel axes for horizontal bar
-	      if (deltaX) {
-	        updateScroll(element, 'left', element.scrollLeft + (deltaX * i.settings.wheelSpeed));
-	      } else {
-	        updateScroll(element, 'left', element.scrollLeft - (deltaY * i.settings.wheelSpeed));
-	      }
-	      shouldPrevent = true;
-	    }
-	
-	    updateGeometry(element);
-	
-	    shouldPrevent = (shouldPrevent || shouldPreventDefault(deltaX, deltaY));
-	    if (shouldPrevent) {
-	      e.stopPropagation();
-	      e.preventDefault();
-	    }
-	  }
-	
-	  if (typeof window.onwheel !== "undefined") {
-	    i.event.bind(element, 'wheel', mousewheelHandler);
-	  } else if (typeof window.onmousewheel !== "undefined") {
-	    i.event.bind(element, 'mousewheel', mousewheelHandler);
-	  }
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	  bindMouseWheelHandler(element, i);
-	};
-
-
-/***/ },
-/* 177 */
-/*!********************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/native-scroll.js ***!
-  \********************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171);
-	
-	function bindNativeScrollHandler(element, i) {
-	  i.event.bind(element, 'scroll', function () {
-	    updateGeometry(element);
-	  });
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	  bindNativeScrollHandler(element, i);
-	};
-
-
-/***/ },
-/* 178 */
-/*!****************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/selection.js ***!
-  \****************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var h = __webpack_require__(/*! ../../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
-	
-	function bindSelectionHandler(element, i) {
-	  function getRangeNode() {
-	    var selection = window.getSelection ? window.getSelection() :
-	                    document.getSelection ? document.getSelection() : '';
-	    if (selection.toString().length === 0) {
-	      return null;
-	    } else {
-	      return selection.getRangeAt(0).commonAncestorContainer;
-	    }
-	  }
-	
-	  var scrollingLoop = null;
-	  var scrollDiff = {top: 0, left: 0};
-	  function startScrolling() {
-	    if (!scrollingLoop) {
-	      scrollingLoop = setInterval(function () {
-	        if (!instances.get(element)) {
-	          clearInterval(scrollingLoop);
-	          return;
-	        }
-	
-	        updateScroll(element, 'top', element.scrollTop + scrollDiff.top);
-	        updateScroll(element, 'left', element.scrollLeft + scrollDiff.left);
-	        updateGeometry(element);
-	      }, 50); // every .1 sec
-	    }
-	  }
-	  function stopScrolling() {
-	    if (scrollingLoop) {
-	      clearInterval(scrollingLoop);
-	      scrollingLoop = null;
-	    }
-	    h.stopScrolling(element);
-	  }
-	
-	  var isSelected = false;
-	  i.event.bind(i.ownerDocument, 'selectionchange', function () {
-	    if (element.contains(getRangeNode())) {
-	      isSelected = true;
-	    } else {
-	      isSelected = false;
-	      stopScrolling();
-	    }
-	  });
-	  i.event.bind(window, 'mouseup', function () {
-	    if (isSelected) {
-	      isSelected = false;
-	      stopScrolling();
-	    }
-	  });
-	
-	  i.event.bind(window, 'mousemove', function (e) {
-	    if (isSelected) {
-	      var mousePosition = {x: e.pageX, y: e.pageY};
-	      var containerGeometry = {
-	        left: element.offsetLeft,
-	        right: element.offsetLeft + element.offsetWidth,
-	        top: element.offsetTop,
-	        bottom: element.offsetTop + element.offsetHeight
-	      };
-	
-	      if (mousePosition.x < containerGeometry.left + 3) {
-	        scrollDiff.left = -5;
-	        h.startScrolling(element, 'x');
-	      } else if (mousePosition.x > containerGeometry.right - 3) {
-	        scrollDiff.left = 5;
-	        h.startScrolling(element, 'x');
-	      } else {
-	        scrollDiff.left = 0;
-	      }
-	
-	      if (mousePosition.y < containerGeometry.top + 3) {
-	        if (containerGeometry.top + 3 - mousePosition.y < 5) {
-	          scrollDiff.top = -5;
-	        } else {
-	          scrollDiff.top = -20;
-	        }
-	        h.startScrolling(element, 'y');
-	      } else if (mousePosition.y > containerGeometry.bottom - 3) {
-	        if (mousePosition.y - containerGeometry.bottom + 3 < 5) {
-	          scrollDiff.top = 5;
-	        } else {
-	          scrollDiff.top = 20;
-	        }
-	        h.startScrolling(element, 'y');
-	      } else {
-	        scrollDiff.top = 0;
-	      }
-	
-	      if (scrollDiff.top === 0 && scrollDiff.left === 0) {
-	        stopScrolling();
-	      } else {
-	        startScrolling();
-	      }
-	    }
-	  });
-	}
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	  bindSelectionHandler(element, i);
-	};
-
-
-/***/ },
-/* 179 */
-/*!************************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/handler/touch.js ***!
-  \************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var instances = __webpack_require__(/*! ../instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 171)
-	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 172);
-	
-	function bindTouchHandler(element, i, supportsTouch, supportsIePointer) {
-	  function shouldPreventDefault(deltaX, deltaY) {
-	    var scrollTop = element.scrollTop;
-	    var scrollLeft = element.scrollLeft;
-	    var magnitudeX = Math.abs(deltaX);
-	    var magnitudeY = Math.abs(deltaY);
-	
-	    if (magnitudeY > magnitudeX) {
-	      // user is perhaps trying to swipe up/down the page
-	
-	      if (((deltaY < 0) && (scrollTop === i.contentHeight - i.containerHeight)) ||
-	          ((deltaY > 0) && (scrollTop === 0))) {
-	        return !i.settings.swipePropagation;
-	      }
-	    } else if (magnitudeX > magnitudeY) {
-	      // user is perhaps trying to swipe left/right across the page
-	
-	      if (((deltaX < 0) && (scrollLeft === i.contentWidth - i.containerWidth)) ||
-	          ((deltaX > 0) && (scrollLeft === 0))) {
-	        return !i.settings.swipePropagation;
-	      }
-	    }
-	
-	    return true;
-	  }
-	
-	  function applyTouchMove(differenceX, differenceY) {
-	    updateScroll(element, 'top', element.scrollTop - differenceY);
-	    updateScroll(element, 'left', element.scrollLeft - differenceX);
-	
-	    updateGeometry(element);
-	  }
-	
-	  var startOffset = {};
-	  var startTime = 0;
-	  var speed = {};
-	  var easingLoop = null;
-	  var inGlobalTouch = false;
-	  var inLocalTouch = false;
-	
-	  function globalTouchStart() {
-	    inGlobalTouch = true;
-	  }
-	  function globalTouchEnd() {
-	    inGlobalTouch = false;
-	  }
-	
-	  function getTouch(e) {
-	    if (e.targetTouches) {
-	      return e.targetTouches[0];
-	    } else {
-	      // Maybe IE pointer
-	      return e;
-	    }
-	  }
-	  function shouldHandle(e) {
-	    if (e.targetTouches && e.targetTouches.length === 1) {
-	      return true;
-	    }
-	    if (e.pointerType && e.pointerType !== 'mouse' && e.pointerType !== e.MSPOINTER_TYPE_MOUSE) {
-	      return true;
-	    }
-	    return false;
-	  }
-	  function touchStart(e) {
-	    if (shouldHandle(e)) {
-	      inLocalTouch = true;
-	
-	      var touch = getTouch(e);
-	
-	      startOffset.pageX = touch.pageX;
-	      startOffset.pageY = touch.pageY;
-	
-	      startTime = (new Date()).getTime();
-	
-	      if (easingLoop !== null) {
-	        clearInterval(easingLoop);
-	      }
-	
-	      e.stopPropagation();
-	    }
-	  }
-	  function touchMove(e) {
-	    if (!inGlobalTouch && inLocalTouch && shouldHandle(e)) {
-	      var touch = getTouch(e);
-	
-	      var currentOffset = {pageX: touch.pageX, pageY: touch.pageY};
-	
-	      var differenceX = currentOffset.pageX - startOffset.pageX;
-	      var differenceY = currentOffset.pageY - startOffset.pageY;
-	
-	      applyTouchMove(differenceX, differenceY);
-	      startOffset = currentOffset;
-	
-	      var currentTime = (new Date()).getTime();
-	
-	      var timeGap = currentTime - startTime;
-	      if (timeGap > 0) {
-	        speed.x = differenceX / timeGap;
-	        speed.y = differenceY / timeGap;
-	        startTime = currentTime;
-	      }
-	
-	      if (shouldPreventDefault(differenceX, differenceY)) {
-	        e.stopPropagation();
-	        e.preventDefault();
-	      }
-	    }
-	  }
-	  function touchEnd() {
-	    if (!inGlobalTouch && inLocalTouch) {
-	      inLocalTouch = false;
-	
-	      clearInterval(easingLoop);
-	      easingLoop = setInterval(function () {
-	        if (!instances.get(element)) {
-	          clearInterval(easingLoop);
-	          return;
-	        }
-	
-	        if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
-	          clearInterval(easingLoop);
-	          return;
-	        }
-	
-	        applyTouchMove(speed.x * 30, speed.y * 30);
-	
-	        speed.x *= 0.8;
-	        speed.y *= 0.8;
-	      }, 10);
-	    }
-	  }
-	
-	  if (supportsTouch) {
-	    i.event.bind(window, 'touchstart', globalTouchStart);
-	    i.event.bind(window, 'touchend', globalTouchEnd);
-	    i.event.bind(element, 'touchstart', touchStart);
-	    i.event.bind(element, 'touchmove', touchMove);
-	    i.event.bind(element, 'touchend', touchEnd);
-	  }
-	
-	  if (supportsIePointer) {
-	    if (window.PointerEvent) {
-	      i.event.bind(window, 'pointerdown', globalTouchStart);
-	      i.event.bind(window, 'pointerup', globalTouchEnd);
-	      i.event.bind(element, 'pointerdown', touchStart);
-	      i.event.bind(element, 'pointermove', touchMove);
-	      i.event.bind(element, 'pointerup', touchEnd);
-	    } else if (window.MSPointerEvent) {
-	      i.event.bind(window, 'MSPointerDown', globalTouchStart);
-	      i.event.bind(window, 'MSPointerUp', globalTouchEnd);
-	      i.event.bind(element, 'MSPointerDown', touchStart);
-	      i.event.bind(element, 'MSPointerMove', touchMove);
-	      i.event.bind(element, 'MSPointerUp', touchEnd);
-	    }
-	  }
-	}
-	
-	module.exports = function (element, supportsTouch, supportsIePointer) {
-	  var i = instances.get(element);
-	  bindTouchHandler(element, i, supportsTouch, supportsIePointer);
-	};
-
-
-/***/ },
-/* 180 */
-/*!*****************************************************!*\
-  !*** ./~/perfect-scrollbar/src/js/plugin/update.js ***!
-  \*****************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
-	 * Licensed under the MIT License
-	 */
-	'use strict';
-	
-	var d = __webpack_require__(/*! ../lib/dom */ 163)
-	  , h = __webpack_require__(/*! ../lib/helper */ 164)
-	  , instances = __webpack_require__(/*! ./instances */ 166)
-	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 171);
-	
-	module.exports = function (element) {
-	  var i = instances.get(element);
-	
-	  if (!i) {
-	    return;
-	  }
-	
-	  // Recalcuate negative scrollLeft adjustment
-	  i.negativeScrollAdjustment = i.isNegativeScroll ? element.scrollWidth - element.clientWidth : 0;
-	
-	  // Recalculate rail margins
-	  d.css(i.scrollbarXRail, 'display', 'block');
-	  d.css(i.scrollbarYRail, 'display', 'block');
-	  i.railXMarginWidth = h.toInt(d.css(i.scrollbarXRail, 'marginLeft')) + h.toInt(d.css(i.scrollbarXRail, 'marginRight'));
-	  i.railYMarginHeight = h.toInt(d.css(i.scrollbarYRail, 'marginTop')) + h.toInt(d.css(i.scrollbarYRail, 'marginBottom'));
-	
-	  // Hide scrollbars not to affect scrollWidth and scrollHeight
-	  d.css(i.scrollbarXRail, 'display', 'none');
-	  d.css(i.scrollbarYRail, 'display', 'none');
-	
-	  updateGeometry(element);
-	
-	  d.css(i.scrollbarXRail, 'display', '');
-	  d.css(i.scrollbarYRail, 'display', '');
-	};
-
-
-/***/ },
-/* 181 */
-/*!***********************************!*\
-  !*** ./js/component/Checkout.jsx ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 183);
-	
-	var _CartStore2 = _interopRequireDefault(_CartStore);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Checkout = (function (_React$Component) {
-	  _inherits(Checkout, _React$Component);
-	
-	  function Checkout() {
-	    _classCallCheck(this, Checkout);
-	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Checkout).apply(this, arguments));
-	  }
-	
-	  _createClass(Checkout, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      _CartStore2.default.addChangeListener(this.forceUpdate.bind(this));
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	
-	      var items = _CartStore2.default.valueArray();
-	
-	      var sum = 0;
-	      if (items.length > 0) {
-	        sum = items.reduce(function (sum, item) {
-	          return sum + item.price * item.quantity;
-	        }, 0).toFixed(2);
-	      }
-	
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'checkout' },
-	        _react2.default.createElement('hr', { className: 'checkout__divider' }),
-	        _react2.default.createElement('input', { type: 'text', className: 'checkout__coupon-input', placeholder: 'coupon code' }),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'checkout__line' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'checkout__line__label' },
-	            'Discount'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'checkout__line__amount' },
-	            '-$0.00'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'checkout__line' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'checkout__line__label' },
-	            'Subtotal'
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'checkout__line__amount ' },
-	            '$' + sum
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'checkout__line' },
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'checkout__line__amount checkout__line__amount--omg-savings' },
-	            '$' + sum
-	          )
+	          { className: 'adjust-qty__number' },
+	          quantity
 	        ),
 	        _react2.default.createElement(
 	          'a',
-	          { className: 'checkout__button' },
-	          _react2.default.createElement('img', { className: 'checkout__button__icon', src: 'img/cart-icon.svg' }),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'checkout__button__label' },
-	            'Checkout'
-	          )
+	          { className: 'adjust-qty__button',
+	            onClick: this.add.bind(this)
+	          },
+	          '+'
 	        )
 	      );
 	    }
 	  }]);
 	
-	  return Checkout;
+	  return QuantityControl;
 	})(_react2.default.Component);
 	
-	exports.default = Checkout;
+	exports.default = QuantityControl;
 
 /***/ },
-/* 182 */
-/*!********************!*\
-  !*** ./js/data.js ***!
-  \********************/
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	var shoes = {
-	
-	    "jameson-vulc": {
-	        id: "jameson-vulc",
-	        name: "Jameson Vulc",
-	        price: 64.99,
-	        imagePath: "img/shoes/jameson-vulc-brown-gum-orig.png",
-	        gender: "man"
-	    },
-	
-	    "marana-x-hook-ups": {
-	        id: "marana-x-hook-ups",
-	        name: "Marana X Hook-Up",
-	        price: 79.99,
-	        imagePath: "img/shoes/marana-x-hook-ups-black-orig.png",
-	        gender: "man"
-	    },
-	
-	    "jameson-e-lite": {
-	        id: "jameson-e-lite",
-	        name: "Jameson E-Lite",
-	        price: 69.99,
-	        imagePath: "img/shoes/jameson-e-lite-maroon-orig.png",
-	        gender: "man"
-	    },
-	
-	    "jameson-e-lite-julian-davidson-4": {
-	        id: "jameson-e-lite-julian-davidson-4",
-	        name: "Jameson E-Lite Julian Davidson",
-	        price: 74.99,
-	        imagePath: "img/shoes/jameson-e-lite-julian-davidson-4-black-gum-orig.png",
-	        gender: "man"
-	    },
-	
-	    "scout-womens-6": {
-	        id: "scout-womens-6",
-	        name: "Scout Women's",
-	        imagePath: "img/shoes/scout-womens-6-teal-orig.png",
-	        price: 59.99,
-	        gender: "woman"
-	    },
-	
-	    "scout-womens-coco-ho-5": {
-	        id: "scout-womens-coco-ho-5",
-	        name: "Scout Women's Coco Ho",
-	        imagePath: "img/shoes/scout-womens-coco-ho-5-olive-white-orig.png",
-	        price: 59.99,
-	        gender: "woman"
-	    },
-	
-	    "jameson-2-womens-8": {
-	        id: "jameson-2-womens-8",
-	        name: "Jameson 2 Women's",
-	        imagePath: "img/shoes/jameson-2-womens-8-black-white-gum-orig.png",
-	        price: 59.99,
-	        gender: "woman"
-	    },
-	
-	    "corby-womens-2": {
-	        id: "corby-womens-2",
-	        name: "Corby Women's",
-	        imagePath: "img/shoes/corby-womens-2-tan-white-orig.png",
-	        price: 44.99,
-	        gender: "woman"
-	    }
-	};
-	
-	var cartItems = {
-	    "jameson-vulc": {
-	        id: "jameson-vulc",
-	        quantity: 1
-	    },
-	
-	    "marana-x-hook-ups": {
-	        id: "marana-x-hook-ups",
-	        quantity: 2
-	    },
-	
-	    "scout-womens-6": {
-	        id: "scout-womens-6",
-	        quantity: 2
-	    },
-	
-	    "scout-womens-coco-ho-5": {
-	        id: "scout-womens-coco-ho-5",
-	        quantity: 1
-	    },
-	
-	    "jameson-2-womens-8": {
-	        id: "jameson-2-womens-8",
-	        quantity: 1
-	    }
-	};
-	
-	exports.shoes = shoes;
-	exports.cartItems = cartItems;
-
-/***/ },
-/* 183 */
+/* 160 */
 /*!*******************************!*\
   !*** ./js/store/CartStore.js ***!
   \*******************************/
@@ -23267,7 +21331,7 @@
 
 	"use strict";
 	
-	var EventEmitter = __webpack_require__(/*! events */ 184);
+	var EventEmitter = __webpack_require__(/*! events */ 161);
 	
 	var emitter = new EventEmitter();
 	
@@ -23325,6 +21389,9 @@
 	      return _cartItems[id];
 	    });
 	  },
+	  cartItems: function cartItems() {
+	    return _cartItems;
+	  },
 	  getCartItems: function getCartItems() {
 	    return _cartItems;
 	  },
@@ -23340,7 +21407,7 @@
 	};
 
 /***/ },
-/* 184 */
+/* 161 */
 /*!********************************************************!*\
   !*** (webpack)/~/node-libs-browser/~/events/events.js ***!
   \********************************************************/
@@ -23647,10 +21714,143 @@
 
 
 /***/ },
-/* 185 */
-/*!******************************************!*\
-  !*** ./js/component/QuantityControl.jsx ***!
-  \******************************************/
+/* 162 */
+/*!*******************************!*\
+  !*** ./js/store/LikeStore.js ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var EventEmitter = __webpack_require__(/*! events */ 161);
+	
+	var emitter = new EventEmitter();
+	
+	function emitChange() {
+	  emitter.emit("change");
+	}
+	
+	var _likeItems = {
+	  // "jameson-vulc": {
+	  //   id: "jameson-vulc"
+	  // },
+	};
+	
+	module.exports = {
+	  addItem: function addItem(product) {
+	    //console.log(product);
+	
+	    _likeItems[product.id] = product;
+	
+	    //console.log(_likeItems);
+	
+	    emitChange();
+	  },
+	  removeItem: function removeItem(pid) {
+	    //console.log(pid);
+	
+	    delete _likeItems[pid];
+	    emitChange();
+	
+	    //console.log(_cartItems);
+	  },
+	  toggleItem: function toggleItem(product) {
+	
+	    var pid = product.id;
+	    if (_likeItems[pid]) delete _likeItems[pid];else _likeItems[product.id] = product;
+	
+	    emitChange();
+	  },
+	  likeItems: function likeItems() {
+	    return _likeItems;
+	  },
+	  getLikeItems: function getLikeItems() {
+	    return _likeItems;
+	  },
+	  getItem: function getItem(pid) {
+	    return _likeItems[pid];
+	  },
+	  addChangeListener: function addChangeListener(callback) {
+	    emitter.addListener("change", callback);
+	  },
+	  removeChangeListener: function removeChangeListener(callback) {
+	    emitter.removeListener("change", callback);
+	  }
+	};
+
+/***/ },
+/* 163 */
+/*!**********************************!*\
+  !*** ./js/component/connect.jsx ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ConnectedStore = __webpack_require__(/*! ./ConnectedStore.jsx */ 164);
+	
+	var _ConnectedStore2 = _interopRequireDefault(_ConnectedStore);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function connect(store) {
+	  for (var _len = arguments.length, propNames = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    propNames[_key - 1] = arguments[_key];
+	  }
+	
+	  return function (ViewComponent) {
+	    var ConnectedViewComponent = (function (_React$Component) {
+	      _inherits(ConnectedViewComponent, _React$Component);
+	
+	      function ConnectedViewComponent() {
+	        _classCallCheck(this, ConnectedViewComponent);
+	
+	        return _possibleConstructorReturn(this, Object.getPrototypeOf(ConnectedViewComponent).apply(this, arguments));
+	      }
+	
+	      _createClass(ConnectedViewComponent, [{
+	        key: 'render',
+	        value: function render() {
+	          var _this2 = this;
+	
+	          return _react2.default.createElement(
+	            _ConnectedStore2.default,
+	            { store: store, propNames: propNames },
+	            function (prop) {
+	              return _react2.default.createElement(ViewComponent, _extends({}, prop, _this2.props));
+	            }
+	          );
+	        }
+	      }]);
+	
+	      return ConnectedViewComponent;
+	    })(_react2.default.Component);
+	
+	    return ConnectedViewComponent;
+	  };
+	}
+	
+	module.exports = connect;
+
+/***/ },
+/* 164 */
+/*!*****************************************!*\
+  !*** ./js/component/ConnectedStore.jsx ***!
+  \*****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23665,7 +21865,355 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 183);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ConnectedStore = (function (_React$Component) {
+	  _inherits(ConnectedStore, _React$Component);
+	
+	  function ConnectedStore() {
+	    _classCallCheck(this, ConnectedStore);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ConnectedStore).apply(this, arguments));
+	  }
+	
+	  _createClass(ConnectedStore, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.props.store.addChangeListener(this.forceUpdate.bind(this));
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      // The `children` property is a function.
+	      var contentRenderFunction = this.props.children;
+	
+	      // 1. Read all the data from store by calling reader methods dynamically.
+	      // 2. Pass the data to `contentRenderFunction`.
+	      var storeProps = {};
+	
+	      this.props.propNames.forEach(function (name) {
+	        storeProps[name] = _this2.props.store[name]();
+	      });
+	
+	      return contentRenderFunction(storeProps);
+	    }
+	  }]);
+	
+	  return ConnectedStore;
+	})(_react2.default.Component);
+	
+	exports.default = ConnectedStore;
+
+/***/ },
+/* 165 */
+/*!********************!*\
+  !*** ./js/data.js ***!
+  \********************/
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	var shoes = {
+	
+	    "jameson-vulc": {
+	        id: "jameson-vulc",
+	        name: "Jameson Vulc",
+	        price: 64.99,
+	        imagePath: "img/shoes/jameson-vulc-brown-gum-orig.png",
+	        gender: "man"
+	    },
+	
+	    "marana-x-hook-ups": {
+	        id: "marana-x-hook-ups",
+	        name: "Marana X Hook-Up",
+	        price: 79.99,
+	        imagePath: "img/shoes/marana-x-hook-ups-black-orig.png",
+	        gender: "man"
+	    },
+	
+	    "jameson-e-lite": {
+	        id: "jameson-e-lite",
+	        name: "Jameson E-Lite",
+	        price: 69.99,
+	        imagePath: "img/shoes/jameson-e-lite-maroon-orig.png",
+	        gender: "man"
+	    },
+	
+	    "jameson-e-lite-julian-davidson-4": {
+	        id: "jameson-e-lite-julian-davidson-4",
+	        name: "Jameson E-Lite Julian Davidson",
+	        price: 74.99,
+	        imagePath: "img/shoes/jameson-e-lite-julian-davidson-4-black-gum-orig.png",
+	        gender: "man"
+	    },
+	
+	    "scout-womens-6": {
+	        id: "scout-womens-6",
+	        name: "Scout Women's",
+	        imagePath: "img/shoes/scout-womens-6-teal-orig.png",
+	        price: 59.99,
+	        gender: "woman"
+	    },
+	
+	    "scout-womens-coco-ho-5": {
+	        id: "scout-womens-coco-ho-5",
+	        name: "Scout Women's Coco Ho",
+	        imagePath: "img/shoes/scout-womens-coco-ho-5-olive-white-orig.png",
+	        price: 59.99,
+	        gender: "woman"
+	    },
+	
+	    "jameson-2-womens-8": {
+	        id: "jameson-2-womens-8",
+	        name: "Jameson 2 Women's",
+	        imagePath: "img/shoes/jameson-2-womens-8-black-white-gum-orig.png",
+	        price: 59.99,
+	        gender: "woman"
+	    },
+	
+	    "corby-womens-2": {
+	        id: "corby-womens-2",
+	        name: "Corby Women's",
+	        imagePath: "img/shoes/corby-womens-2-tan-white-orig.png",
+	        price: 44.99,
+	        gender: "woman"
+	    }
+	};
+	
+	var cartItems = {
+	    "jameson-vulc": {
+	        id: "jameson-vulc",
+	        quantity: 1
+	    },
+	
+	    "marana-x-hook-ups": {
+	        id: "marana-x-hook-ups",
+	        quantity: 2
+	    },
+	
+	    "scout-womens-6": {
+	        id: "scout-womens-6",
+	        quantity: 2
+	    },
+	
+	    "scout-womens-coco-ho-5": {
+	        id: "scout-womens-coco-ho-5",
+	        quantity: 1
+	    },
+	
+	    "jameson-2-womens-8": {
+	        id: "jameson-2-womens-8",
+	        quantity: 1
+	    }
+	};
+	
+	exports.shoes = shoes;
+	exports.cartItems = cartItems;
+
+/***/ },
+/* 166 */
+/*!*******************************!*\
+  !*** ./js/component/Cart.jsx ***!
+  \*******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _QuantityControl = __webpack_require__(/*! ./QuantityControl.jsx */ 159);
+	
+	var _QuantityControl2 = _interopRequireDefault(_QuantityControl);
+	
+	var _perfectScrollbar = __webpack_require__(/*! perfect-scrollbar */ 168);
+	
+	var _perfectScrollbar2 = _interopRequireDefault(_perfectScrollbar);
+	
+	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 160);
+	
+	var _CartStore2 = _interopRequireDefault(_CartStore);
+	
+	var _connect = __webpack_require__(/*! ./connect.jsx */ 163);
+	
+	var _connect2 = _interopRequireDefault(_connect);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var CartItem = (function (_React$Component) {
+	  _inherits(CartItem, _React$Component);
+	
+	  function CartItem() {
+	    _classCallCheck(this, CartItem);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(CartItem).apply(this, arguments));
+	  }
+	
+	  _createClass(CartItem, [{
+	    key: 'removeSelfHandler',
+	    value: function removeSelfHandler() {
+	      _CartStore2.default.removeItem(this.props.line.id);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props$line = this.props.line;
+	      var id = _props$line.id;
+	      var name = _props$line.name;
+	      var imagePath = _props$line.imagePath;
+	      var price = _props$line.price;
+	      var quantity = _props$line.quantity;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'cart-item' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'cart-item__top-part' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'cart-item__image' },
+	            _react2.default.createElement('img', { src: imagePath })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'cart-item__top-part__middle' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'cart-item__title' },
+	              name
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'cart-item__price' },
+	              '$' + price
+	            )
+	          ),
+	          _react2.default.createElement('img', { className: 'cart-item__trash', src: 'img/trash-icon.svg',
+	            onClick: this.removeSelfHandler.bind(this)
+	          })
+	        ),
+	        ' ',
+	        _react2.default.createElement(_QuantityControl2.default, { quantity: quantity, pid: id })
+	      );
+	    }
+	  }]);
+	
+	  return CartItem;
+	})(_react2.default.Component);
+	
+	var Cart = (function (_React$Component2) {
+	  _inherits(Cart, _React$Component2);
+	
+	  function Cart() {
+	    _classCallCheck(this, Cart);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Cart).apply(this, arguments));
+	  }
+	
+	  _createClass(Cart, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var cart = _react2.default.findDOMNode(this.refs.cart);
+	      _perfectScrollbar2.default.initialize(cart);
+	
+	      //CartStore.addChangeListener(this.forceUpdate.bind(this));
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	
+	      //console.log(this.props);
+	
+	      var cartItems = this.props.cartItems;
+	
+	      var ids = Object.keys(cartItems);
+	      var items = ids.map(function (id, index) {
+	        return _react2.default.createElement(CartItem, { key: index, line: cartItems[id] });
+	      });
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'cart' },
+	        _react2.default.createElement(
+	          'h3',
+	          { className: 'cart__title' },
+	          'Shopping Cart'
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'cart__content', ref: 'cart' },
+	          items
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Cart;
+	})(_react2.default.Component);
+	
+	//@connect(CartStore, "cartItems")
+	
+	var ConnectedCart = (function (_Cart) {
+	  _inherits(ConnectedCart, _Cart);
+	
+	  function ConnectedCart() {
+	    _classCallCheck(this, ConnectedCart);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ConnectedCart).apply(this, arguments));
+	  }
+	
+	  return ConnectedCart;
+	})(Cart);
+	
+	ConnectedCart = (0, _connect2.default)(_CartStore2.default, "cartItems")(ConnectedCart);
+	
+	exports.default = ConnectedCart;
+
+/***/ },
+/* 167 */
+/*!***********************************!*\
+  !*** ./js/component/Checkout.jsx ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _CartStore = __webpack_require__(/*! ../store/CartStore.js */ 160);
 	
 	var _CartStore2 = _interopRequireDefault(_CartStore);
 	
@@ -23677,61 +22225,1866 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var QuantityControl = (function (_React$Component) {
-	  _inherits(QuantityControl, _React$Component);
+	var Checkout = (function (_React$Component) {
+	  _inherits(Checkout, _React$Component);
 	
-	  function QuantityControl() {
-	    _classCallCheck(this, QuantityControl);
+	  function Checkout() {
+	    _classCallCheck(this, Checkout);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(QuantityControl).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Checkout).apply(this, arguments));
 	  }
 	
-	  _createClass(QuantityControl, [{
-	    key: 'add',
-	    value: function add() {
-	      _CartStore2.default.addItemQuantity(this.props.pid);
-	    }
-	  }, {
-	    key: 'sub',
-	    value: function sub() {
-	      _CartStore2.default.subItemQuantity(this.props.pid);
+	  _createClass(Checkout, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      _CartStore2.default.addChangeListener(this.forceUpdate.bind(this));
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var quantity = this.props.quantity;
-	      var className = this.props.style ? "adjust-qty adjust-qty--gray" : "adjust-qty";
+	
+	      var items = _CartStore2.default.valueArray();
+	
+	      var sum = 0;
+	      if (items.length > 0) {
+	        sum = items.reduce(function (sum, item) {
+	          return sum + item.price * item.quantity;
+	        }, 0).toFixed(2);
+	      }
 	
 	      return _react2.default.createElement(
 	        'div',
-	        { className: className },
+	        { className: 'checkout' },
+	        _react2.default.createElement('hr', { className: 'checkout__divider' }),
+	        _react2.default.createElement('input', { type: 'text', className: 'checkout__coupon-input', placeholder: 'coupon code' }),
 	        _react2.default.createElement(
-	          'a',
-	          { className: 'adjust-qty__button',
-	            onClick: this.sub.bind(this)
-	          },
-	          '-'
+	          'div',
+	          { className: 'checkout__line' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'checkout__line__label' },
+	            'Discount'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'checkout__line__amount' },
+	            '-$0.00'
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'adjust-qty__number' },
-	          quantity
+	          { className: 'checkout__line' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'checkout__line__label' },
+	            'Subtotal'
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'checkout__line__amount ' },
+	            '$' + sum
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'checkout__line' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'checkout__line__amount checkout__line__amount--omg-savings' },
+	            '$' + sum
+	          )
 	        ),
 	        _react2.default.createElement(
 	          'a',
-	          { className: 'adjust-qty__button',
-	            onClick: this.add.bind(this)
-	          },
-	          '+'
+	          { className: 'checkout__button' },
+	          _react2.default.createElement('img', { className: 'checkout__button__icon', src: 'img/cart-icon.svg' }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'checkout__button__label' },
+	            'Checkout'
+	          )
 	        )
 	      );
 	    }
 	  }]);
 	
-	  return QuantityControl;
+	  return Checkout;
 	})(_react2.default.Component);
 	
-	exports.default = QuantityControl;
+	exports.default = Checkout;
+
+/***/ },
+/* 168 */
+/*!**************************************!*\
+  !*** ./~/perfect-scrollbar/index.js ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	module.exports = __webpack_require__(/*! ./src/js/main */ 169);
+
+
+/***/ },
+/* 169 */
+/*!********************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/main.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var destroy = __webpack_require__(/*! ./plugin/destroy */ 170)
+	  , initialize = __webpack_require__(/*! ./plugin/initialize */ 178)
+	  , update = __webpack_require__(/*! ./plugin/update */ 188);
+	
+	module.exports = {
+	  initialize: initialize,
+	  update: update,
+	  destroy: destroy
+	};
+
+
+/***/ },
+/* 170 */
+/*!******************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/destroy.js ***!
+  \******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var d = __webpack_require__(/*! ../lib/dom */ 171)
+	  , h = __webpack_require__(/*! ../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ./instances */ 174);
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	
+	  if (!i) {
+	    return;
+	  }
+	
+	  i.event.unbindAll();
+	  d.remove(i.scrollbarX);
+	  d.remove(i.scrollbarY);
+	  d.remove(i.scrollbarXRail);
+	  d.remove(i.scrollbarYRail);
+	  h.removePsClasses(element);
+	
+	  instances.remove(element);
+	};
+
+
+/***/ },
+/* 171 */
+/*!***********************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/lib/dom.js ***!
+  \***********************************************/
+/***/ function(module, exports) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var DOM = {};
+	
+	DOM.e = function (tagName, className) {
+	  var element = document.createElement(tagName);
+	  element.className = className;
+	  return element;
+	};
+	
+	DOM.appendTo = function (child, parent) {
+	  parent.appendChild(child);
+	  return child;
+	};
+	
+	function cssGet(element, styleName) {
+	  return window.getComputedStyle(element)[styleName];
+	}
+	
+	function cssSet(element, styleName, styleValue) {
+	  if (typeof styleValue === 'number') {
+	    styleValue = styleValue.toString() + 'px';
+	  }
+	  element.style[styleName] = styleValue;
+	  return element;
+	}
+	
+	function cssMultiSet(element, obj) {
+	  for (var key in obj) {
+	    var val = obj[key];
+	    if (typeof val === 'number') {
+	      val = val.toString() + 'px';
+	    }
+	    element.style[key] = val;
+	  }
+	  return element;
+	}
+	
+	DOM.css = function (element, styleNameOrObject, styleValue) {
+	  if (typeof styleNameOrObject === 'object') {
+	    // multiple set with object
+	    return cssMultiSet(element, styleNameOrObject);
+	  } else {
+	    if (typeof styleValue === 'undefined') {
+	      return cssGet(element, styleNameOrObject);
+	    } else {
+	      return cssSet(element, styleNameOrObject, styleValue);
+	    }
+	  }
+	};
+	
+	DOM.matches = function (element, query) {
+	  if (typeof element.matches !== 'undefined') {
+	    return element.matches(query);
+	  } else {
+	    if (typeof element.matchesSelector !== 'undefined') {
+	      return element.matchesSelector(query);
+	    } else if (typeof element.webkitMatchesSelector !== 'undefined') {
+	      return element.webkitMatchesSelector(query);
+	    } else if (typeof element.mozMatchesSelector !== 'undefined') {
+	      return element.mozMatchesSelector(query);
+	    } else if (typeof element.msMatchesSelector !== 'undefined') {
+	      return element.msMatchesSelector(query);
+	    }
+	  }
+	};
+	
+	DOM.remove = function (element) {
+	  if (typeof element.remove !== 'undefined') {
+	    element.remove();
+	  } else {
+	    if (element.parentNode) {
+	      element.parentNode.removeChild(element);
+	    }
+	  }
+	};
+	
+	DOM.queryChildren = function (element, selector) {
+	  return Array.prototype.filter.call(element.childNodes, function (child) {
+	    return DOM.matches(child, selector);
+	  });
+	};
+	
+	module.exports = DOM;
+
+
+/***/ },
+/* 172 */
+/*!**************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/lib/helper.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var cls = __webpack_require__(/*! ./class */ 173)
+	  , d = __webpack_require__(/*! ./dom */ 171);
+	
+	exports.toInt = function (x) {
+	  return parseInt(x, 10) || 0;
+	};
+	
+	exports.clone = function (obj) {
+	  if (obj === null) {
+	    return null;
+	  } else if (typeof obj === 'object') {
+	    var result = {};
+	    for (var key in obj) {
+	      result[key] = this.clone(obj[key]);
+	    }
+	    return result;
+	  } else {
+	    return obj;
+	  }
+	};
+	
+	exports.extend = function (original, source) {
+	  var result = this.clone(original);
+	  for (var key in source) {
+	    result[key] = this.clone(source[key]);
+	  }
+	  return result;
+	};
+	
+	exports.isEditable = function (el) {
+	  return d.matches(el, "input,[contenteditable]") ||
+	         d.matches(el, "select,[contenteditable]") ||
+	         d.matches(el, "textarea,[contenteditable]") ||
+	         d.matches(el, "button,[contenteditable]");
+	};
+	
+	exports.removePsClasses = function (element) {
+	  var clsList = cls.list(element);
+	  for (var i = 0; i < clsList.length; i++) {
+	    var className = clsList[i];
+	    if (className.indexOf('ps-') === 0) {
+	      cls.remove(element, className);
+	    }
+	  }
+	};
+	
+	exports.outerWidth = function (element) {
+	  return this.toInt(d.css(element, 'width')) +
+	         this.toInt(d.css(element, 'paddingLeft')) +
+	         this.toInt(d.css(element, 'paddingRight')) +
+	         this.toInt(d.css(element, 'borderLeftWidth')) +
+	         this.toInt(d.css(element, 'borderRightWidth'));
+	};
+	
+	exports.startScrolling = function (element, axis) {
+	  cls.add(element, 'ps-in-scrolling');
+	  if (typeof axis !== 'undefined') {
+	    cls.add(element, 'ps-' + axis);
+	  } else {
+	    cls.add(element, 'ps-x');
+	    cls.add(element, 'ps-y');
+	  }
+	};
+	
+	exports.stopScrolling = function (element, axis) {
+	  cls.remove(element, 'ps-in-scrolling');
+	  if (typeof axis !== 'undefined') {
+	    cls.remove(element, 'ps-' + axis);
+	  } else {
+	    cls.remove(element, 'ps-x');
+	    cls.remove(element, 'ps-y');
+	  }
+	};
+	
+	exports.env = {
+	  isWebKit: 'WebkitAppearance' in document.documentElement.style,
+	  supportsTouch: (('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch),
+	  supportsIePointer: window.navigator.msMaxTouchPoints !== null
+	};
+
+
+/***/ },
+/* 173 */
+/*!*************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/lib/class.js ***!
+  \*************************************************/
+/***/ function(module, exports) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	function oldAdd(element, className) {
+	  var classes = element.className.split(' ');
+	  if (classes.indexOf(className) < 0) {
+	    classes.push(className);
+	  }
+	  element.className = classes.join(' ');
+	}
+	
+	function oldRemove(element, className) {
+	  var classes = element.className.split(' ');
+	  var idx = classes.indexOf(className);
+	  if (idx >= 0) {
+	    classes.splice(idx, 1);
+	  }
+	  element.className = classes.join(' ');
+	}
+	
+	exports.add = function (element, className) {
+	  if (element.classList) {
+	    element.classList.add(className);
+	  } else {
+	    oldAdd(element, className);
+	  }
+	};
+	
+	exports.remove = function (element, className) {
+	  if (element.classList) {
+	    element.classList.remove(className);
+	  } else {
+	    oldRemove(element, className);
+	  }
+	};
+	
+	exports.list = function (element) {
+	  if (element.classList) {
+	    return Array.prototype.slice.apply(element.classList);
+	  } else {
+	    return element.className.split(' ');
+	  }
+	};
+
+
+/***/ },
+/* 174 */
+/*!********************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/instances.js ***!
+  \********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var d = __webpack_require__(/*! ../lib/dom */ 171)
+	  , defaultSettings = __webpack_require__(/*! ./default-setting */ 175)
+	  , EventManager = __webpack_require__(/*! ../lib/event-manager */ 176)
+	  , guid = __webpack_require__(/*! ../lib/guid */ 177)
+	  , h = __webpack_require__(/*! ../lib/helper */ 172);
+	
+	var instances = {};
+	
+	function Instance(element) {
+	  var i = this;
+	
+	  i.settings = h.clone(defaultSettings);
+	  i.containerWidth = null;
+	  i.containerHeight = null;
+	  i.contentWidth = null;
+	  i.contentHeight = null;
+	
+	  i.isRtl = d.css(element, 'direction') === "rtl";
+	  i.isNegativeScroll = (function () {
+	    var originalScrollLeft = element.scrollLeft;
+	    var result = null;
+	    element.scrollLeft = -1;
+	    result = element.scrollLeft < 0;
+	    element.scrollLeft = originalScrollLeft;
+	    return result;
+	  })();
+	  i.negativeScrollAdjustment = i.isNegativeScroll ? element.scrollWidth - element.clientWidth : 0;
+	  i.event = new EventManager();
+	  i.ownerDocument = element.ownerDocument || document;
+	
+	  i.scrollbarXRail = d.appendTo(d.e('div', 'ps-scrollbar-x-rail'), element);
+	  i.scrollbarX = d.appendTo(d.e('div', 'ps-scrollbar-x'), i.scrollbarXRail);
+	  i.scrollbarXActive = null;
+	  i.scrollbarXWidth = null;
+	  i.scrollbarXLeft = null;
+	  i.scrollbarXBottom = h.toInt(d.css(i.scrollbarXRail, 'bottom'));
+	  i.isScrollbarXUsingBottom = i.scrollbarXBottom === i.scrollbarXBottom; // !isNaN
+	  i.scrollbarXTop = i.isScrollbarXUsingBottom ? null : h.toInt(d.css(i.scrollbarXRail, 'top'));
+	  i.railBorderXWidth = h.toInt(d.css(i.scrollbarXRail, 'borderLeftWidth')) + h.toInt(d.css(i.scrollbarXRail, 'borderRightWidth'));
+	  // Set rail to display:block to calculate margins
+	  d.css(i.scrollbarXRail, 'display', 'block');
+	  i.railXMarginWidth = h.toInt(d.css(i.scrollbarXRail, 'marginLeft')) + h.toInt(d.css(i.scrollbarXRail, 'marginRight'));
+	  d.css(i.scrollbarXRail, 'display', '');
+	  i.railXWidth = null;
+	  i.railXRatio = null;
+	
+	  i.scrollbarYRail = d.appendTo(d.e('div', 'ps-scrollbar-y-rail'), element);
+	  i.scrollbarY = d.appendTo(d.e('div', 'ps-scrollbar-y'), i.scrollbarYRail);
+	  i.scrollbarYActive = null;
+	  i.scrollbarYHeight = null;
+	  i.scrollbarYTop = null;
+	  i.scrollbarYRight = h.toInt(d.css(i.scrollbarYRail, 'right'));
+	  i.isScrollbarYUsingRight = i.scrollbarYRight === i.scrollbarYRight; // !isNaN
+	  i.scrollbarYLeft = i.isScrollbarYUsingRight ? null : h.toInt(d.css(i.scrollbarYRail, 'left'));
+	  i.scrollbarYOuterWidth = i.isRtl ? h.outerWidth(i.scrollbarY) : null;
+	  i.railBorderYWidth = h.toInt(d.css(i.scrollbarYRail, 'borderTopWidth')) + h.toInt(d.css(i.scrollbarYRail, 'borderBottomWidth'));
+	  d.css(i.scrollbarYRail, 'display', 'block');
+	  i.railYMarginHeight = h.toInt(d.css(i.scrollbarYRail, 'marginTop')) + h.toInt(d.css(i.scrollbarYRail, 'marginBottom'));
+	  d.css(i.scrollbarYRail, 'display', '');
+	  i.railYHeight = null;
+	  i.railYRatio = null;
+	}
+	
+	function getId(element) {
+	  if (typeof element.dataset === 'undefined') {
+	    return element.getAttribute('data-ps-id');
+	  } else {
+	    return element.dataset.psId;
+	  }
+	}
+	
+	function setId(element, id) {
+	  if (typeof element.dataset === 'undefined') {
+	    element.setAttribute('data-ps-id', id);
+	  } else {
+	    element.dataset.psId = id;
+	  }
+	}
+	
+	function removeId(element) {
+	  if (typeof element.dataset === 'undefined') {
+	    element.removeAttribute('data-ps-id');
+	  } else {
+	    delete element.dataset.psId;
+	  }
+	}
+	
+	exports.add = function (element) {
+	  var newId = guid();
+	  setId(element, newId);
+	  instances[newId] = new Instance(element);
+	  return instances[newId];
+	};
+	
+	exports.remove = function (element) {
+	  delete instances[getId(element)];
+	  removeId(element);
+	};
+	
+	exports.get = function (element) {
+	  return instances[getId(element)];
+	};
+
+
+/***/ },
+/* 175 */
+/*!**************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/default-setting.js ***!
+  \**************************************************************/
+/***/ function(module, exports) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	module.exports = {
+	  maxScrollbarLength: null,
+	  minScrollbarLength: null,
+	  scrollXMarginOffset: 0,
+	  scrollYMarginOffset: 0,
+	  stopPropagationOnClick: true,
+	  suppressScrollX: false,
+	  suppressScrollY: false,
+	  swipePropagation: true,
+	  useBothWheelAxes: false,
+	  useKeyboard: true,
+	  useSelectionScroll: false,
+	  wheelPropagation: false,
+	  wheelSpeed: 1
+	};
+
+
+/***/ },
+/* 176 */
+/*!*********************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/lib/event-manager.js ***!
+  \*********************************************************/
+/***/ function(module, exports) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var EventElement = function (element) {
+	  this.element = element;
+	  this.events = {};
+	};
+	
+	EventElement.prototype.bind = function (eventName, handler) {
+	  if (typeof this.events[eventName] === 'undefined') {
+	    this.events[eventName] = [];
+	  }
+	  this.events[eventName].push(handler);
+	  this.element.addEventListener(eventName, handler, false);
+	};
+	
+	EventElement.prototype.unbind = function (eventName, handler) {
+	  var isHandlerProvided = (typeof handler !== 'undefined');
+	  this.events[eventName] = this.events[eventName].filter(function (hdlr) {
+	    if (isHandlerProvided && hdlr !== handler) {
+	      return true;
+	    }
+	    this.element.removeEventListener(eventName, hdlr, false);
+	    return false;
+	  }, this);
+	};
+	
+	EventElement.prototype.unbindAll = function () {
+	  for (var name in this.events) {
+	    this.unbind(name);
+	  }
+	};
+	
+	var EventManager = function () {
+	  this.eventElements = [];
+	};
+	
+	EventManager.prototype.eventElement = function (element) {
+	  var ee = this.eventElements.filter(function (eventElement) {
+	    return eventElement.element === element;
+	  })[0];
+	  if (typeof ee === 'undefined') {
+	    ee = new EventElement(element);
+	    this.eventElements.push(ee);
+	  }
+	  return ee;
+	};
+	
+	EventManager.prototype.bind = function (element, eventName, handler) {
+	  this.eventElement(element).bind(eventName, handler);
+	};
+	
+	EventManager.prototype.unbind = function (element, eventName, handler) {
+	  this.eventElement(element).unbind(eventName, handler);
+	};
+	
+	EventManager.prototype.unbindAll = function () {
+	  for (var i = 0; i < this.eventElements.length; i++) {
+	    this.eventElements[i].unbindAll();
+	  }
+	};
+	
+	EventManager.prototype.once = function (element, eventName, handler) {
+	  var ee = this.eventElement(element);
+	  var onceHandler = function (e) {
+	    ee.unbind(eventName, onceHandler);
+	    handler(e);
+	  };
+	  ee.bind(eventName, onceHandler);
+	};
+	
+	module.exports = EventManager;
+
+
+/***/ },
+/* 177 */
+/*!************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/lib/guid.js ***!
+  \************************************************/
+/***/ function(module, exports) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	module.exports = (function () {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000)
+	               .toString(16)
+	               .substring(1);
+	  }
+	  return function () {
+	    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+	           s4() + '-' + s4() + s4() + s4();
+	  };
+	})();
+
+
+/***/ },
+/* 178 */
+/*!*********************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/initialize.js ***!
+  \*********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var cls = __webpack_require__(/*! ../lib/class */ 173)
+	  , h = __webpack_require__(/*! ../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ./instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 179);
+	
+	// Handlers
+	var clickRailHandler = __webpack_require__(/*! ./handler/click-rail */ 181)
+	  , dragScrollbarHandler = __webpack_require__(/*! ./handler/drag-scrollbar */ 182)
+	  , keyboardHandler = __webpack_require__(/*! ./handler/keyboard */ 183)
+	  , mouseWheelHandler = __webpack_require__(/*! ./handler/mouse-wheel */ 184)
+	  , nativeScrollHandler = __webpack_require__(/*! ./handler/native-scroll */ 185)
+	  , selectionHandler = __webpack_require__(/*! ./handler/selection */ 186)
+	  , touchHandler = __webpack_require__(/*! ./handler/touch */ 187);
+	
+	module.exports = function (element, userSettings) {
+	  userSettings = typeof userSettings === 'object' ? userSettings : {};
+	
+	  cls.add(element, 'ps-container');
+	
+	  // Create a plugin instance.
+	  var i = instances.add(element);
+	
+	  i.settings = h.extend(i.settings, userSettings);
+	
+	  clickRailHandler(element);
+	  dragScrollbarHandler(element);
+	  mouseWheelHandler(element);
+	  nativeScrollHandler(element);
+	
+	  if (i.settings.useSelectionScroll) {
+	    selectionHandler(element);
+	  }
+	
+	  if (h.env.supportsTouch || h.env.supportsIePointer) {
+	    touchHandler(element, h.env.supportsTouch, h.env.supportsIePointer);
+	  }
+	  if (i.settings.useKeyboard) {
+	    keyboardHandler(element);
+	  }
+	
+	  updateGeometry(element);
+	};
+
+
+/***/ },
+/* 179 */
+/*!**************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/update-geometry.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var cls = __webpack_require__(/*! ../lib/class */ 173)
+	  , d = __webpack_require__(/*! ../lib/dom */ 171)
+	  , h = __webpack_require__(/*! ../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ./instances */ 174)
+	  , updateScroll = __webpack_require__(/*! ./update-scroll */ 180);
+	
+	function getThumbSize(i, thumbSize) {
+	  if (i.settings.minScrollbarLength) {
+	    thumbSize = Math.max(thumbSize, i.settings.minScrollbarLength);
+	  }
+	  if (i.settings.maxScrollbarLength) {
+	    thumbSize = Math.min(thumbSize, i.settings.maxScrollbarLength);
+	  }
+	  return thumbSize;
+	}
+	
+	function updateCss(element, i) {
+	  var xRailOffset = {width: i.railXWidth};
+	  if (i.isRtl) {
+	    xRailOffset.left = i.negativeScrollAdjustment + element.scrollLeft + i.containerWidth - i.contentWidth;
+	  } else {
+	    xRailOffset.left = element.scrollLeft;
+	  }
+	  if (i.isScrollbarXUsingBottom) {
+	    xRailOffset.bottom = i.scrollbarXBottom - element.scrollTop;
+	  } else {
+	    xRailOffset.top = i.scrollbarXTop + element.scrollTop;
+	  }
+	  d.css(i.scrollbarXRail, xRailOffset);
+	
+	  var yRailOffset = {top: element.scrollTop, height: i.railYHeight};
+	  if (i.isScrollbarYUsingRight) {
+	    if (i.isRtl) {
+	      yRailOffset.right = i.contentWidth - (i.negativeScrollAdjustment + element.scrollLeft) - i.scrollbarYRight - i.scrollbarYOuterWidth;
+	    } else {
+	      yRailOffset.right = i.scrollbarYRight - element.scrollLeft;
+	    }
+	  } else {
+	    if (i.isRtl) {
+	      yRailOffset.left = i.negativeScrollAdjustment + element.scrollLeft + i.containerWidth * 2 - i.contentWidth - i.scrollbarYLeft - i.scrollbarYOuterWidth;
+	    } else {
+	      yRailOffset.left = i.scrollbarYLeft + element.scrollLeft;
+	    }
+	  }
+	  d.css(i.scrollbarYRail, yRailOffset);
+	
+	  d.css(i.scrollbarX, {left: i.scrollbarXLeft, width: i.scrollbarXWidth - i.railBorderXWidth});
+	  d.css(i.scrollbarY, {top: i.scrollbarYTop, height: i.scrollbarYHeight - i.railBorderYWidth});
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	
+	  i.containerWidth = element.clientWidth;
+	  i.containerHeight = element.clientHeight;
+	  i.contentWidth = element.scrollWidth;
+	  i.contentHeight = element.scrollHeight;
+	
+	  var existingRails;
+	  if (!element.contains(i.scrollbarXRail)) {
+	    existingRails = d.queryChildren(element, '.ps-scrollbar-x-rail');
+	    if (existingRails.length > 0) {
+	      existingRails.forEach(function (rail) {
+	        d.remove(rail);
+	      });
+	    }
+	    d.appendTo(i.scrollbarXRail, element);
+	  }
+	  if (!element.contains(i.scrollbarYRail)) {
+	    existingRails = d.queryChildren(element, '.ps-scrollbar-y-rail');
+	    if (existingRails.length > 0) {
+	      existingRails.forEach(function (rail) {
+	        d.remove(rail);
+	      });
+	    }
+	    d.appendTo(i.scrollbarYRail, element);
+	  }
+	
+	  if (!i.settings.suppressScrollX && i.containerWidth + i.settings.scrollXMarginOffset < i.contentWidth) {
+	    i.scrollbarXActive = true;
+	    i.railXWidth = i.containerWidth - i.railXMarginWidth;
+	    i.railXRatio = i.containerWidth / i.railXWidth;
+	    i.scrollbarXWidth = getThumbSize(i, h.toInt(i.railXWidth * i.containerWidth / i.contentWidth));
+	    i.scrollbarXLeft = h.toInt((i.negativeScrollAdjustment + element.scrollLeft) * (i.railXWidth - i.scrollbarXWidth) / (i.contentWidth - i.containerWidth));
+	  } else {
+	    i.scrollbarXActive = false;
+	    i.scrollbarXWidth = 0;
+	    i.scrollbarXLeft = 0;
+	    element.scrollLeft = 0;
+	  }
+	
+	  if (!i.settings.suppressScrollY && i.containerHeight + i.settings.scrollYMarginOffset < i.contentHeight) {
+	    i.scrollbarYActive = true;
+	    i.railYHeight = i.containerHeight - i.railYMarginHeight;
+	    i.railYRatio = i.containerHeight / i.railYHeight;
+	    i.scrollbarYHeight = getThumbSize(i, h.toInt(i.railYHeight * i.containerHeight / i.contentHeight));
+	    i.scrollbarYTop = h.toInt(element.scrollTop * (i.railYHeight - i.scrollbarYHeight) / (i.contentHeight - i.containerHeight));
+	  } else {
+	    i.scrollbarYActive = false;
+	    i.scrollbarYHeight = 0;
+	    i.scrollbarYTop = 0;
+	    updateScroll(element, 'top', 0);
+	  }
+	
+	  if (i.scrollbarXLeft >= i.railXWidth - i.scrollbarXWidth) {
+	    i.scrollbarXLeft = i.railXWidth - i.scrollbarXWidth;
+	  }
+	  if (i.scrollbarYTop >= i.railYHeight - i.scrollbarYHeight) {
+	    i.scrollbarYTop = i.railYHeight - i.scrollbarYHeight;
+	  }
+	
+	  updateCss(element, i);
+	
+	  cls[i.scrollbarXActive ? 'add' : 'remove'](element, 'ps-active-x');
+	  cls[i.scrollbarYActive ? 'add' : 'remove'](element, 'ps-active-y');
+	};
+
+
+/***/ },
+/* 180 */
+/*!************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/update-scroll.js ***!
+  \************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var instances = __webpack_require__(/*! ./instances */ 174);
+	
+	var upEvent = document.createEvent('Event')
+	  , downEvent = document.createEvent('Event')
+	  , leftEvent = document.createEvent('Event')
+	  , rightEvent = document.createEvent('Event')
+	  , yEvent = document.createEvent('Event')
+	  , xEvent = document.createEvent('Event')
+	  , xStartEvent = document.createEvent('Event')
+	  , xEndEvent = document.createEvent('Event')
+	  , yStartEvent = document.createEvent('Event')
+	  , yEndEvent = document.createEvent('Event')
+	  , lastTop
+	  , lastLeft;
+	
+	upEvent.initEvent('ps-scroll-up', true, true);
+	downEvent.initEvent('ps-scroll-down', true, true);
+	leftEvent.initEvent('ps-scroll-left', true, true);
+	rightEvent.initEvent('ps-scroll-right', true, true);
+	yEvent.initEvent('ps-scroll-y', true, true);
+	xEvent.initEvent('ps-scroll-x', true, true);
+	xStartEvent.initEvent('ps-x-reach-start', true, true);
+	xEndEvent.initEvent('ps-x-reach-end', true, true);
+	yStartEvent.initEvent('ps-y-reach-start', true, true);
+	yEndEvent.initEvent('ps-y-reach-end', true, true);
+	
+	module.exports = function (element, axis, value) {
+	  if (typeof element === 'undefined') {
+	    throw 'You must provide an element to the update-scroll function';
+	  }
+	
+	  if (typeof axis === 'undefined') {
+	    throw 'You must provide an axis to the update-scroll function';
+	  }
+	
+	  if (typeof value === 'undefined') {
+	    throw 'You must provide a value to the update-scroll function';
+	  }
+	
+	  if (axis === 'top' && value <= 0) {
+	    element.scrollTop = 0;
+	    element.dispatchEvent(yStartEvent);
+	    return; // don't allow negative scroll
+	  }
+	
+	  if (axis === 'left' && value <= 0) {
+	    element.scrollLeft = 0;
+	    element.dispatchEvent(xStartEvent);
+	    return; // don't allow negative scroll
+	  }
+	
+	  var i = instances.get(element);
+	
+	  if (axis === 'top' && value > i.contentHeight - i.containerHeight) {
+	    element.scrollTop = i.contentHeight - i.containerHeight;
+	    element.dispatchEvent(yEndEvent);
+	    return; // don't allow scroll past container
+	  }
+	
+	  if (axis === 'left' && value > i.contentWidth - i.containerWidth) {
+	    element.scrollLeft = i.contentWidth - i.containerWidth;
+	    element.dispatchEvent(xEndEvent);
+	    return; // don't allow scroll past container
+	  }
+	
+	  if (!lastTop) {
+	    lastTop = element.scrollTop;
+	  }
+	
+	  if (!lastLeft) {
+	    lastLeft = element.scrollLeft;
+	  }
+	
+	  if (axis === 'top' && value < lastTop) {
+	    element.dispatchEvent(upEvent);
+	  }
+	
+	  if (axis === 'top' && value > lastTop) {
+	    element.dispatchEvent(downEvent);
+	  }
+	
+	  if (axis === 'left' && value < lastLeft) {
+	    element.dispatchEvent(leftEvent);
+	  }
+	
+	  if (axis === 'left' && value > lastLeft) {
+	    element.dispatchEvent(rightEvent);
+	  }
+	
+	  if (axis === 'top') {
+	    element.scrollTop = lastTop = value;
+	    element.dispatchEvent(yEvent);
+	  }
+	
+	  if (axis === 'left') {
+	    element.scrollLeft = lastLeft = value;
+	    element.dispatchEvent(xEvent);
+	  }
+	
+	};
+
+
+/***/ },
+/* 181 */
+/*!*****************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/click-rail.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var h = __webpack_require__(/*! ../../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 180);
+	
+	function bindClickRailHandler(element, i) {
+	  function pageOffset(el) {
+	    return el.getBoundingClientRect();
+	  }
+	  var stopPropagation = window.Event.prototype.stopPropagation.bind;
+	
+	  if (i.settings.stopPropagationOnClick) {
+	    i.event.bind(i.scrollbarY, 'click', stopPropagation);
+	  }
+	  i.event.bind(i.scrollbarYRail, 'click', function (e) {
+	    var halfOfScrollbarLength = h.toInt(i.scrollbarYHeight / 2);
+	    var positionTop = i.railYRatio * (e.pageY - window.scrollY - pageOffset(i.scrollbarYRail).top - halfOfScrollbarLength);
+	    var maxPositionTop = i.railYRatio * (i.railYHeight - i.scrollbarYHeight);
+	    var positionRatio = positionTop / maxPositionTop;
+	
+	    if (positionRatio < 0) {
+	      positionRatio = 0;
+	    } else if (positionRatio > 1) {
+	      positionRatio = 1;
+	    }
+	
+	    updateScroll(element, 'top', (i.contentHeight - i.containerHeight) * positionRatio);
+	    updateGeometry(element);
+	
+	    e.stopPropagation();
+	  });
+	
+	  if (i.settings.stopPropagationOnClick) {
+	    i.event.bind(i.scrollbarX, 'click', stopPropagation);
+	  }
+	  i.event.bind(i.scrollbarXRail, 'click', function (e) {
+	    var halfOfScrollbarLength = h.toInt(i.scrollbarXWidth / 2);
+	    var positionLeft = i.railXRatio * (e.pageX - window.scrollX - pageOffset(i.scrollbarXRail).left - halfOfScrollbarLength);
+	    var maxPositionLeft = i.railXRatio * (i.railXWidth - i.scrollbarXWidth);
+	    var positionRatio = positionLeft / maxPositionLeft;
+	
+	    if (positionRatio < 0) {
+	      positionRatio = 0;
+	    } else if (positionRatio > 1) {
+	      positionRatio = 1;
+	    }
+	
+	    updateScroll(element, 'left', ((i.contentWidth - i.containerWidth) * positionRatio) - i.negativeScrollAdjustment);
+	    updateGeometry(element);
+	
+	    e.stopPropagation();
+	  });
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	  bindClickRailHandler(element, i);
+	};
+
+
+/***/ },
+/* 182 */
+/*!*********************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/drag-scrollbar.js ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var d = __webpack_require__(/*! ../../lib/dom */ 171)
+	  , h = __webpack_require__(/*! ../../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 180);
+	
+	function bindMouseScrollXHandler(element, i) {
+	  var currentLeft = null;
+	  var currentPageX = null;
+	
+	  function updateScrollLeft(deltaX) {
+	    var newLeft = currentLeft + (deltaX * i.railXRatio);
+	    var maxLeft = i.scrollbarXRail.getBoundingClientRect().left + (i.railXRatio * (i.railXWidth - i.scrollbarXWidth));
+	
+	    if (newLeft < 0) {
+	      i.scrollbarXLeft = 0;
+	    } else if (newLeft > maxLeft) {
+	      i.scrollbarXLeft = maxLeft;
+	    } else {
+	      i.scrollbarXLeft = newLeft;
+	    }
+	
+	    var scrollLeft = h.toInt(i.scrollbarXLeft * (i.contentWidth - i.containerWidth) / (i.containerWidth - (i.railXRatio * i.scrollbarXWidth))) - i.negativeScrollAdjustment;
+	    updateScroll(element, 'left', scrollLeft);
+	  }
+	
+	  var mouseMoveHandler = function (e) {
+	    updateScrollLeft(e.pageX - currentPageX);
+	    updateGeometry(element);
+	    e.stopPropagation();
+	    e.preventDefault();
+	  };
+	
+	  var mouseUpHandler = function () {
+	    h.stopScrolling(element, 'x');
+	    i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+	  };
+	
+	  i.event.bind(i.scrollbarX, 'mousedown', function (e) {
+	    currentPageX = e.pageX;
+	    currentLeft = h.toInt(d.css(i.scrollbarX, 'left')) * i.railXRatio;
+	    h.startScrolling(element, 'x');
+	
+	    i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+	    i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
+	
+	    e.stopPropagation();
+	    e.preventDefault();
+	  });
+	}
+	
+	function bindMouseScrollYHandler(element, i) {
+	  var currentTop = null;
+	  var currentPageY = null;
+	
+	  function updateScrollTop(deltaY) {
+	    var newTop = currentTop + (deltaY * i.railYRatio);
+	    var maxTop = i.scrollbarYRail.getBoundingClientRect().top + (i.railYRatio * (i.railYHeight - i.scrollbarYHeight));
+	
+	    if (newTop < 0) {
+	      i.scrollbarYTop = 0;
+	    } else if (newTop > maxTop) {
+	      i.scrollbarYTop = maxTop;
+	    } else {
+	      i.scrollbarYTop = newTop;
+	    }
+	
+	    var scrollTop = h.toInt(i.scrollbarYTop * (i.contentHeight - i.containerHeight) / (i.containerHeight - (i.railYRatio * i.scrollbarYHeight)));
+	    updateScroll(element, 'top', scrollTop);
+	  }
+	
+	  var mouseMoveHandler = function (e) {
+	    updateScrollTop(e.pageY - currentPageY);
+	    updateGeometry(element);
+	    e.stopPropagation();
+	    e.preventDefault();
+	  };
+	
+	  var mouseUpHandler = function () {
+	    h.stopScrolling(element, 'y');
+	    i.event.unbind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+	  };
+	
+	  i.event.bind(i.scrollbarY, 'mousedown', function (e) {
+	    currentPageY = e.pageY;
+	    currentTop = h.toInt(d.css(i.scrollbarY, 'top')) * i.railYRatio;
+	    h.startScrolling(element, 'y');
+	
+	    i.event.bind(i.ownerDocument, 'mousemove', mouseMoveHandler);
+	    i.event.once(i.ownerDocument, 'mouseup', mouseUpHandler);
+	
+	    e.stopPropagation();
+	    e.preventDefault();
+	  });
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	  bindMouseScrollXHandler(element, i);
+	  bindMouseScrollYHandler(element, i);
+	};
+
+
+/***/ },
+/* 183 */
+/*!***************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/keyboard.js ***!
+  \***************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var h = __webpack_require__(/*! ../../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 180);
+	
+	function bindKeyboardHandler(element, i) {
+	  var hovered = false;
+	  i.event.bind(element, 'mouseenter', function () {
+	    hovered = true;
+	  });
+	  i.event.bind(element, 'mouseleave', function () {
+	    hovered = false;
+	  });
+	
+	  var shouldPrevent = false;
+	  function shouldPreventDefault(deltaX, deltaY) {
+	    var scrollTop = element.scrollTop;
+	    if (deltaX === 0) {
+	      if (!i.scrollbarYActive) {
+	        return false;
+	      }
+	      if ((scrollTop === 0 && deltaY > 0) || (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)) {
+	        return !i.settings.wheelPropagation;
+	      }
+	    }
+	
+	    var scrollLeft = element.scrollLeft;
+	    if (deltaY === 0) {
+	      if (!i.scrollbarXActive) {
+	        return false;
+	      }
+	      if ((scrollLeft === 0 && deltaX < 0) || (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)) {
+	        return !i.settings.wheelPropagation;
+	      }
+	    }
+	    return true;
+	  }
+	
+	  i.event.bind(i.ownerDocument, 'keydown', function (e) {
+	    if (e.isDefaultPrevented && e.isDefaultPrevented()) {
+	      return;
+	    }
+	
+	    if (!hovered) {
+	      return;
+	    }
+	
+	    var activeElement = document.activeElement ? document.activeElement : i.ownerDocument.activeElement;
+	    if (activeElement) {
+	      // go deeper if element is a webcomponent
+	      while (activeElement.shadowRoot) {
+	        activeElement = activeElement.shadowRoot.activeElement;
+	      }
+	      if (h.isEditable(activeElement)) {
+	        return;
+	      }
+	    }
+	
+	    var deltaX = 0;
+	    var deltaY = 0;
+	
+	    switch (e.which) {
+	    case 37: // left
+	      deltaX = -30;
+	      break;
+	    case 38: // up
+	      deltaY = 30;
+	      break;
+	    case 39: // right
+	      deltaX = 30;
+	      break;
+	    case 40: // down
+	      deltaY = -30;
+	      break;
+	    case 33: // page up
+	      deltaY = 90;
+	      break;
+	    case 32: // space bar
+	      if (e.shiftKey) {
+	        deltaY = 90;
+	      } else {
+	        deltaY = -90;
+	      }
+	      break;
+	    case 34: // page down
+	      deltaY = -90;
+	      break;
+	    case 35: // end
+	      if (e.ctrlKey) {
+	        deltaY = -i.contentHeight;
+	      } else {
+	        deltaY = -i.containerHeight;
+	      }
+	      break;
+	    case 36: // home
+	      if (e.ctrlKey) {
+	        deltaY = element.scrollTop;
+	      } else {
+	        deltaY = i.containerHeight;
+	      }
+	      break;
+	    default:
+	      return;
+	    }
+	
+	    updateScroll(element, 'top', element.scrollTop - deltaY);
+	    updateScroll(element, 'left', element.scrollLeft + deltaX);
+	    updateGeometry(element);
+	
+	    shouldPrevent = shouldPreventDefault(deltaX, deltaY);
+	    if (shouldPrevent) {
+	      e.preventDefault();
+	    }
+	  });
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	  bindKeyboardHandler(element, i);
+	};
+
+
+/***/ },
+/* 184 */
+/*!******************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/mouse-wheel.js ***!
+  \******************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var h = __webpack_require__(/*! ../../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 180);
+	
+	function bindMouseWheelHandler(element, i) {
+	  var shouldPrevent = false;
+	
+	  function shouldPreventDefault(deltaX, deltaY) {
+	    var scrollTop = element.scrollTop;
+	    if (deltaX === 0) {
+	      if (!i.scrollbarYActive) {
+	        return false;
+	      }
+	      if ((scrollTop === 0 && deltaY > 0) || (scrollTop >= i.contentHeight - i.containerHeight && deltaY < 0)) {
+	        return !i.settings.wheelPropagation;
+	      }
+	    }
+	
+	    var scrollLeft = element.scrollLeft;
+	    if (deltaY === 0) {
+	      if (!i.scrollbarXActive) {
+	        return false;
+	      }
+	      if ((scrollLeft === 0 && deltaX < 0) || (scrollLeft >= i.contentWidth - i.containerWidth && deltaX > 0)) {
+	        return !i.settings.wheelPropagation;
+	      }
+	    }
+	    return true;
+	  }
+	
+	  function getDeltaFromEvent(e) {
+	    var deltaX = e.deltaX;
+	    var deltaY = -1 * e.deltaY;
+	
+	    if (typeof deltaX === "undefined" || typeof deltaY === "undefined") {
+	      // OS X Safari
+	      deltaX = -1 * e.wheelDeltaX / 6;
+	      deltaY = e.wheelDeltaY / 6;
+	    }
+	
+	    if (e.deltaMode && e.deltaMode === 1) {
+	      // Firefox in deltaMode 1: Line scrolling
+	      deltaX *= 10;
+	      deltaY *= 10;
+	    }
+	
+	    if (deltaX !== deltaX && deltaY !== deltaY/* NaN checks */) {
+	      // IE in some mouse drivers
+	      deltaX = 0;
+	      deltaY = e.wheelDelta;
+	    }
+	
+	    return [deltaX, deltaY];
+	  }
+	
+	  function shouldBeConsumedByTextarea(deltaX, deltaY) {
+	    var hoveredTextarea = element.querySelector('textarea:hover');
+	    if (hoveredTextarea) {
+	      var maxScrollTop = hoveredTextarea.scrollHeight - hoveredTextarea.clientHeight;
+	      if (maxScrollTop > 0) {
+	        if (!(hoveredTextarea.scrollTop === 0 && deltaY > 0) &&
+	            !(hoveredTextarea.scrollTop === maxScrollTop && deltaY < 0)) {
+	          return true;
+	        }
+	      }
+	      var maxScrollLeft = hoveredTextarea.scrollLeft - hoveredTextarea.clientWidth;
+	      if (maxScrollLeft > 0) {
+	        if (!(hoveredTextarea.scrollLeft === 0 && deltaX < 0) &&
+	            !(hoveredTextarea.scrollLeft === maxScrollLeft && deltaX > 0)) {
+	          return true;
+	        }
+	      }
+	    }
+	    return false;
+	  }
+	
+	  function mousewheelHandler(e) {
+	    // FIXME: this is a quick fix for the select problem in FF and IE.
+	    // If there comes an effective way to deal with the problem,
+	    // this lines should be removed.
+	    if (!h.env.isWebKit && element.querySelector('select:focus')) {
+	      return;
+	    }
+	
+	    var delta = getDeltaFromEvent(e);
+	
+	    var deltaX = delta[0];
+	    var deltaY = delta[1];
+	
+	    if (shouldBeConsumedByTextarea(deltaX, deltaY)) {
+	      return;
+	    }
+	
+	    shouldPrevent = false;
+	    if (!i.settings.useBothWheelAxes) {
+	      // deltaX will only be used for horizontal scrolling and deltaY will
+	      // only be used for vertical scrolling - this is the default
+	      updateScroll(element, 'top', element.scrollTop - (deltaY * i.settings.wheelSpeed));
+	      updateScroll(element, 'left', element.scrollLeft + (deltaX * i.settings.wheelSpeed));
+	    } else if (i.scrollbarYActive && !i.scrollbarXActive) {
+	      // only vertical scrollbar is active and useBothWheelAxes option is
+	      // active, so let's scroll vertical bar using both mouse wheel axes
+	      if (deltaY) {
+	        updateScroll(element, 'top', element.scrollTop - (deltaY * i.settings.wheelSpeed));
+	      } else {
+	        updateScroll(element, 'top', element.scrollTop + (deltaX * i.settings.wheelSpeed));
+	      }
+	      shouldPrevent = true;
+	    } else if (i.scrollbarXActive && !i.scrollbarYActive) {
+	      // useBothWheelAxes and only horizontal bar is active, so use both
+	      // wheel axes for horizontal bar
+	      if (deltaX) {
+	        updateScroll(element, 'left', element.scrollLeft + (deltaX * i.settings.wheelSpeed));
+	      } else {
+	        updateScroll(element, 'left', element.scrollLeft - (deltaY * i.settings.wheelSpeed));
+	      }
+	      shouldPrevent = true;
+	    }
+	
+	    updateGeometry(element);
+	
+	    shouldPrevent = (shouldPrevent || shouldPreventDefault(deltaX, deltaY));
+	    if (shouldPrevent) {
+	      e.stopPropagation();
+	      e.preventDefault();
+	    }
+	  }
+	
+	  if (typeof window.onwheel !== "undefined") {
+	    i.event.bind(element, 'wheel', mousewheelHandler);
+	  } else if (typeof window.onmousewheel !== "undefined") {
+	    i.event.bind(element, 'mousewheel', mousewheelHandler);
+	  }
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	  bindMouseWheelHandler(element, i);
+	};
+
+
+/***/ },
+/* 185 */
+/*!********************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/native-scroll.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179);
+	
+	function bindNativeScrollHandler(element, i) {
+	  i.event.bind(element, 'scroll', function () {
+	    updateGeometry(element);
+	  });
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	  bindNativeScrollHandler(element, i);
+	};
+
+
+/***/ },
+/* 186 */
+/*!****************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/selection.js ***!
+  \****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var h = __webpack_require__(/*! ../../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 180);
+	
+	function bindSelectionHandler(element, i) {
+	  function getRangeNode() {
+	    var selection = window.getSelection ? window.getSelection() :
+	                    document.getSelection ? document.getSelection() : '';
+	    if (selection.toString().length === 0) {
+	      return null;
+	    } else {
+	      return selection.getRangeAt(0).commonAncestorContainer;
+	    }
+	  }
+	
+	  var scrollingLoop = null;
+	  var scrollDiff = {top: 0, left: 0};
+	  function startScrolling() {
+	    if (!scrollingLoop) {
+	      scrollingLoop = setInterval(function () {
+	        if (!instances.get(element)) {
+	          clearInterval(scrollingLoop);
+	          return;
+	        }
+	
+	        updateScroll(element, 'top', element.scrollTop + scrollDiff.top);
+	        updateScroll(element, 'left', element.scrollLeft + scrollDiff.left);
+	        updateGeometry(element);
+	      }, 50); // every .1 sec
+	    }
+	  }
+	  function stopScrolling() {
+	    if (scrollingLoop) {
+	      clearInterval(scrollingLoop);
+	      scrollingLoop = null;
+	    }
+	    h.stopScrolling(element);
+	  }
+	
+	  var isSelected = false;
+	  i.event.bind(i.ownerDocument, 'selectionchange', function () {
+	    if (element.contains(getRangeNode())) {
+	      isSelected = true;
+	    } else {
+	      isSelected = false;
+	      stopScrolling();
+	    }
+	  });
+	  i.event.bind(window, 'mouseup', function () {
+	    if (isSelected) {
+	      isSelected = false;
+	      stopScrolling();
+	    }
+	  });
+	
+	  i.event.bind(window, 'mousemove', function (e) {
+	    if (isSelected) {
+	      var mousePosition = {x: e.pageX, y: e.pageY};
+	      var containerGeometry = {
+	        left: element.offsetLeft,
+	        right: element.offsetLeft + element.offsetWidth,
+	        top: element.offsetTop,
+	        bottom: element.offsetTop + element.offsetHeight
+	      };
+	
+	      if (mousePosition.x < containerGeometry.left + 3) {
+	        scrollDiff.left = -5;
+	        h.startScrolling(element, 'x');
+	      } else if (mousePosition.x > containerGeometry.right - 3) {
+	        scrollDiff.left = 5;
+	        h.startScrolling(element, 'x');
+	      } else {
+	        scrollDiff.left = 0;
+	      }
+	
+	      if (mousePosition.y < containerGeometry.top + 3) {
+	        if (containerGeometry.top + 3 - mousePosition.y < 5) {
+	          scrollDiff.top = -5;
+	        } else {
+	          scrollDiff.top = -20;
+	        }
+	        h.startScrolling(element, 'y');
+	      } else if (mousePosition.y > containerGeometry.bottom - 3) {
+	        if (mousePosition.y - containerGeometry.bottom + 3 < 5) {
+	          scrollDiff.top = 5;
+	        } else {
+	          scrollDiff.top = 20;
+	        }
+	        h.startScrolling(element, 'y');
+	      } else {
+	        scrollDiff.top = 0;
+	      }
+	
+	      if (scrollDiff.top === 0 && scrollDiff.left === 0) {
+	        stopScrolling();
+	      } else {
+	        startScrolling();
+	      }
+	    }
+	  });
+	}
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	  bindSelectionHandler(element, i);
+	};
+
+
+/***/ },
+/* 187 */
+/*!************************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/handler/touch.js ***!
+  \************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var instances = __webpack_require__(/*! ../instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ../update-geometry */ 179)
+	  , updateScroll = __webpack_require__(/*! ../update-scroll */ 180);
+	
+	function bindTouchHandler(element, i, supportsTouch, supportsIePointer) {
+	  function shouldPreventDefault(deltaX, deltaY) {
+	    var scrollTop = element.scrollTop;
+	    var scrollLeft = element.scrollLeft;
+	    var magnitudeX = Math.abs(deltaX);
+	    var magnitudeY = Math.abs(deltaY);
+	
+	    if (magnitudeY > magnitudeX) {
+	      // user is perhaps trying to swipe up/down the page
+	
+	      if (((deltaY < 0) && (scrollTop === i.contentHeight - i.containerHeight)) ||
+	          ((deltaY > 0) && (scrollTop === 0))) {
+	        return !i.settings.swipePropagation;
+	      }
+	    } else if (magnitudeX > magnitudeY) {
+	      // user is perhaps trying to swipe left/right across the page
+	
+	      if (((deltaX < 0) && (scrollLeft === i.contentWidth - i.containerWidth)) ||
+	          ((deltaX > 0) && (scrollLeft === 0))) {
+	        return !i.settings.swipePropagation;
+	      }
+	    }
+	
+	    return true;
+	  }
+	
+	  function applyTouchMove(differenceX, differenceY) {
+	    updateScroll(element, 'top', element.scrollTop - differenceY);
+	    updateScroll(element, 'left', element.scrollLeft - differenceX);
+	
+	    updateGeometry(element);
+	  }
+	
+	  var startOffset = {};
+	  var startTime = 0;
+	  var speed = {};
+	  var easingLoop = null;
+	  var inGlobalTouch = false;
+	  var inLocalTouch = false;
+	
+	  function globalTouchStart() {
+	    inGlobalTouch = true;
+	  }
+	  function globalTouchEnd() {
+	    inGlobalTouch = false;
+	  }
+	
+	  function getTouch(e) {
+	    if (e.targetTouches) {
+	      return e.targetTouches[0];
+	    } else {
+	      // Maybe IE pointer
+	      return e;
+	    }
+	  }
+	  function shouldHandle(e) {
+	    if (e.targetTouches && e.targetTouches.length === 1) {
+	      return true;
+	    }
+	    if (e.pointerType && e.pointerType !== 'mouse' && e.pointerType !== e.MSPOINTER_TYPE_MOUSE) {
+	      return true;
+	    }
+	    return false;
+	  }
+	  function touchStart(e) {
+	    if (shouldHandle(e)) {
+	      inLocalTouch = true;
+	
+	      var touch = getTouch(e);
+	
+	      startOffset.pageX = touch.pageX;
+	      startOffset.pageY = touch.pageY;
+	
+	      startTime = (new Date()).getTime();
+	
+	      if (easingLoop !== null) {
+	        clearInterval(easingLoop);
+	      }
+	
+	      e.stopPropagation();
+	    }
+	  }
+	  function touchMove(e) {
+	    if (!inGlobalTouch && inLocalTouch && shouldHandle(e)) {
+	      var touch = getTouch(e);
+	
+	      var currentOffset = {pageX: touch.pageX, pageY: touch.pageY};
+	
+	      var differenceX = currentOffset.pageX - startOffset.pageX;
+	      var differenceY = currentOffset.pageY - startOffset.pageY;
+	
+	      applyTouchMove(differenceX, differenceY);
+	      startOffset = currentOffset;
+	
+	      var currentTime = (new Date()).getTime();
+	
+	      var timeGap = currentTime - startTime;
+	      if (timeGap > 0) {
+	        speed.x = differenceX / timeGap;
+	        speed.y = differenceY / timeGap;
+	        startTime = currentTime;
+	      }
+	
+	      if (shouldPreventDefault(differenceX, differenceY)) {
+	        e.stopPropagation();
+	        e.preventDefault();
+	      }
+	    }
+	  }
+	  function touchEnd() {
+	    if (!inGlobalTouch && inLocalTouch) {
+	      inLocalTouch = false;
+	
+	      clearInterval(easingLoop);
+	      easingLoop = setInterval(function () {
+	        if (!instances.get(element)) {
+	          clearInterval(easingLoop);
+	          return;
+	        }
+	
+	        if (Math.abs(speed.x) < 0.01 && Math.abs(speed.y) < 0.01) {
+	          clearInterval(easingLoop);
+	          return;
+	        }
+	
+	        applyTouchMove(speed.x * 30, speed.y * 30);
+	
+	        speed.x *= 0.8;
+	        speed.y *= 0.8;
+	      }, 10);
+	    }
+	  }
+	
+	  if (supportsTouch) {
+	    i.event.bind(window, 'touchstart', globalTouchStart);
+	    i.event.bind(window, 'touchend', globalTouchEnd);
+	    i.event.bind(element, 'touchstart', touchStart);
+	    i.event.bind(element, 'touchmove', touchMove);
+	    i.event.bind(element, 'touchend', touchEnd);
+	  }
+	
+	  if (supportsIePointer) {
+	    if (window.PointerEvent) {
+	      i.event.bind(window, 'pointerdown', globalTouchStart);
+	      i.event.bind(window, 'pointerup', globalTouchEnd);
+	      i.event.bind(element, 'pointerdown', touchStart);
+	      i.event.bind(element, 'pointermove', touchMove);
+	      i.event.bind(element, 'pointerup', touchEnd);
+	    } else if (window.MSPointerEvent) {
+	      i.event.bind(window, 'MSPointerDown', globalTouchStart);
+	      i.event.bind(window, 'MSPointerUp', globalTouchEnd);
+	      i.event.bind(element, 'MSPointerDown', touchStart);
+	      i.event.bind(element, 'MSPointerMove', touchMove);
+	      i.event.bind(element, 'MSPointerUp', touchEnd);
+	    }
+	  }
+	}
+	
+	module.exports = function (element, supportsTouch, supportsIePointer) {
+	  var i = instances.get(element);
+	  bindTouchHandler(element, i, supportsTouch, supportsIePointer);
+	};
+
+
+/***/ },
+/* 188 */
+/*!*****************************************************!*\
+  !*** ./~/perfect-scrollbar/src/js/plugin/update.js ***!
+  \*****************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Copyright (c) 2015 Hyunje Alex Jun and other contributors
+	 * Licensed under the MIT License
+	 */
+	'use strict';
+	
+	var d = __webpack_require__(/*! ../lib/dom */ 171)
+	  , h = __webpack_require__(/*! ../lib/helper */ 172)
+	  , instances = __webpack_require__(/*! ./instances */ 174)
+	  , updateGeometry = __webpack_require__(/*! ./update-geometry */ 179);
+	
+	module.exports = function (element) {
+	  var i = instances.get(element);
+	
+	  if (!i) {
+	    return;
+	  }
+	
+	  // Recalcuate negative scrollLeft adjustment
+	  i.negativeScrollAdjustment = i.isNegativeScroll ? element.scrollWidth - element.clientWidth : 0;
+	
+	  // Recalculate rail margins
+	  d.css(i.scrollbarXRail, 'display', 'block');
+	  d.css(i.scrollbarYRail, 'display', 'block');
+	  i.railXMarginWidth = h.toInt(d.css(i.scrollbarXRail, 'marginLeft')) + h.toInt(d.css(i.scrollbarXRail, 'marginRight'));
+	  i.railYMarginHeight = h.toInt(d.css(i.scrollbarYRail, 'marginTop')) + h.toInt(d.css(i.scrollbarYRail, 'marginBottom'));
+	
+	  // Hide scrollbars not to affect scrollWidth and scrollHeight
+	  d.css(i.scrollbarXRail, 'display', 'none');
+	  d.css(i.scrollbarYRail, 'display', 'none');
+	
+	  updateGeometry(element);
+	
+	  d.css(i.scrollbarXRail, 'display', '');
+	  d.css(i.scrollbarYRail, 'display', '');
+	};
+
+
+/***/ },
+/* 189 */
+/*!**********************************!*\
+  !*** ./js/store/ProductStore.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var _data = __webpack_require__(/*! ../data.js */ 165);
+	
+	var _LikeStore = __webpack_require__(/*! ./LikeStore.js */ 162);
+	
+	var _LikeStore2 = _interopRequireDefault(_LikeStore);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var EventEmitter = __webpack_require__(/*! events */ 161);
+	
+	var emitter = new EventEmitter();
+	
+	function emitChange() {
+	  emitter.emit("change");
+	}
+	
+	var _products = _data.shoes;
+	var _showOnlyLike = false;
+	
+	module.exports = {
+	  products: function products() {
+	    return _products;
+	  },
+	  filteredProducts: function filteredProducts() {
+	    if (_showOnlyLike) {
+	      var liked = _LikeStore2.default.likeItems();
+	      var products = Object.keys(liked).map(function (id) {
+	        return _products[id];
+	      });
+	      return products;
+	    } else {
+	      return _products;
+	    }
+	  },
+	  toggleShowOnlyLike: function toggleShowOnlyLike() {
+	    _showOnlyLike = _showOnlyLike ? false : true;
+	    emitChange();
+	  },
+	  showOnlyLike: function showOnlyLike() {
+	    return _showOnlyLike;
+	  },
+	  addChangeListener: function addChangeListener(callback) {
+	    emitter.addListener("change", callback);
+	  },
+	  removeChangeListener: function removeChangeListener(callback) {
+	    emitter.removeListener("change", callback);
+	  }
+	};
 
 /***/ }
 /******/ ]);

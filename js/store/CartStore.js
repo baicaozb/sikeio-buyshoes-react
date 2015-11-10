@@ -67,9 +67,15 @@ module.exports = {
   },
 
 
+  cartItems(){
+    return _cartItems;
+  },
+
   getCartItems(){
     return _cartItems;
   },
+
+
 
   getItem(pid){
     return _cartItems[pid];

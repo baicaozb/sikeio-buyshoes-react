@@ -4,7 +4,7 @@ import Products from "./component/Products.jsx";
 import Cart from "./component/Cart.jsx";
 import Checkout from "./component/Checkout.jsx";
 
-import {shoes,cartItems} from './data.js';
+
 
 let App = React.createClass({
     render() {
@@ -20,7 +20,7 @@ let App = React.createClass({
                         <SiteTitle/>
                     </div>
                     <div className="site__content">
-                        <Products data={shoes}/>
+                        <Products />
                     </div>
                 </div>
                 <div className="site__right-sidebar">

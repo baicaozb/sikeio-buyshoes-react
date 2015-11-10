@@ -2,14 +2,25 @@ import React from "react";
 import QuantityControl from './QuantityControl.jsx'
 
 import CartStore from "../store/CartStore.js"
+import LikeStore from "../store/LikeStore.js"
+import ProductStore from "../store/ProductStore.js"
+
+import connect from './connect.jsx'
+
+
 
 
 class Product extends React.Component
 {
 
   addProductHandler(e){
-    CartStore.addItem(this.props.product)
+    CartStore.addItem(this.props.product);
   }
+
+  addLikeHandler(e) {
+    LikeStore.toggleItem(this.props.product);
+  }
+
 
   render() {
 
@@ -20,11 +31,14 @@ class Product extends React.Component
         <img className="product__add__icon" src="img/cart-icon.svg" />
       </a>;
 
-    let item = CartStore.getItem(id);
+    let cartItems = this.props.cartItems;
+    let item = cartItems[id];
     if( item != null ) {
       addIcon = <QuantityControl quantity={item.quantity} pid={id} style="gray"/>;
     }
 
+    let likeItems = this.props.likeItems;
+    let heartIcon = likeItems && likeItems[id] ? "img/heart-liked.svg" : "img/heart.svg";
 
     return (
       <div className="product">
@@ -43,7 +57,7 @@ class Product extends React.Component
           <div className="product__name">
             {name}
           </div>
-          <img className="product__heart" src="img/heart.svg" />
+          <img className="product__heart" src={heartIcon} onClick={this.addLikeHandler.bind(this)}/>
         </div>
       </div>
     );
@@ -55,15 +69,17 @@ class Product extends React.Component
 class Products extends React.Component
 {
 
-  componentDidMount() {
-    CartStore.addChangeListener(this.forceUpdate.bind(this));
-  }
-
   render() {
-    let shoes = this.props.data;
-    let names = Object.keys(shoes);
-    let products = names.map((name, index) => {
-      return <Product key={index} product={shoes[name]} />
+
+    let shoes = this.props.filteredProducts;
+    let cartItems = this.props.cartItems;
+    let likeItems = this.props.likeItems;
+    let ids = Object.keys(shoes);
+
+
+    let products = ids.map((id, index) => {
+      return <Product key={index} product={shoes[id]}
+                      cartItems={cartItems} likeItems={likeItems}/>
     })
 
 
@@ -75,6 +91,13 @@ class Products extends React.Component
   }
 }
 
+//@connect(CartStore, "cartItems")
+//@connect(LikeStore, "likeItems")
+class ConnectedProducts extends Products {}
+
+ConnectedProducts = connect(CartStore, "cartItems")(ConnectedProducts);
+ConnectedProducts = connect(LikeStore, "likeItems")(ConnectedProducts);
+ConnectedProducts = connect(ProductStore, "filteredProducts")(ConnectedProducts);
 
 
-export default Products;
+export default ConnectedProducts;

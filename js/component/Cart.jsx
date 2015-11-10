@@ -4,6 +4,8 @@ import QuantityControl from './QuantityControl.jsx'
 import Ps from 'perfect-scrollbar';
 import CartStore from '../store/CartStore.js'
 
+import connect from './connect.jsx'
+
 class CartItem extends React.Component
 {
 
@@ -50,12 +52,14 @@ class Cart extends React.Component
     let cart = React.findDOMNode(this.refs.cart);
     Ps.initialize(cart);
 
-    CartStore.addChangeListener(this.forceUpdate.bind(this));
+    //CartStore.addChangeListener(this.forceUpdate.bind(this));
   }
 
   render() {
 
-    let cartItems = CartStore.getCartItems();
+    //console.log(this.props);
+
+    let {cartItems} = this.props;
     let ids = Object.keys(cartItems);
     let items = ids.map((id, index) => {
       return <CartItem key={index} line={cartItems[id]} />
@@ -70,11 +74,16 @@ class Cart extends React.Component
         </div>
       </div>
     );
-
-
   }
 }
 
-export default Cart;
+
+//@connect(CartStore, "cartItems")
+class ConnectedCart extends Cart {}
+
+ConnectedCart = connect(CartStore, "cartItems")(ConnectedCart);
+
+
+export default ConnectedCart;
 
 
